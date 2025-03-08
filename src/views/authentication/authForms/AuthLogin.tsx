@@ -17,12 +17,13 @@ import CustomTextField from '../../../components/forms/theme-elements/CustomText
 import CustomFormLabel from '../../../components/forms/theme-elements/CustomFormLabel';
 
 import AuthSocialButtons from './AuthSocialButtons';
+import { useTranslation } from 'react-i18next';
 
 const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const handleLogin = async () => {
     try {
       await login(email, password);
@@ -42,7 +43,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
 
       {subtext}
 
-      <AuthSocialButtons title="Sign in with" />
+      {/* <AuthSocialButtons title="Sign in with" /> */}
       <Box mt={3}>
         <Divider>
           <Typography
@@ -53,14 +54,19 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             position="relative"
             px={2}
           >
-            or sign in with
+            تسجيل الدخول
           </Typography>
         </Divider>
       </Box>
 
       <Stack>
         <Box>
-          <CustomFormLabel htmlFor="email">Email</CustomFormLabel>
+          <CustomFormLabel
+            htmlFor="email"
+            sx={{ textAlign: 'right', display: 'block', fontSize: '1rem' }}
+          >
+            البريد الإلكتروني
+          </CustomFormLabel>
           <CustomTextField
             id="email"
             variant="outlined"
@@ -70,7 +76,12 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           />
         </Box>
         <Box>
-          <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+          <CustomFormLabel
+            htmlFor="password"
+            sx={{ fontSize: '1rem', textAlign: 'right', display: 'block' }}
+          >
+            كلمة المرور
+          </CustomFormLabel>
           <CustomTextField
             id="password"
             type="password"
@@ -81,12 +92,12 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           />
         </Box>
         <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
-          <FormGroup>
+          {/* <FormGroup>
             <FormControlLabel
               control={<CustomCheckbox defaultChecked />}
               label="Remember this Device"
             />
-          </FormGroup>
+          </FormGroup> */}
           <Typography
             component={Link}
             to="/auth/forgot-password"
@@ -94,15 +105,25 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             sx={{
               textDecoration: 'none',
               color: 'primary.main',
+              textAlign: 'right',
+              display: 'block',
+              fontSize: '1rem',
             }}
           >
-            Forgot Password?
+            هل نسيت كلمة المرور؟
           </Typography>
         </Stack>
       </Stack>
       <Box>
-        <Button color="primary" variant="contained" size="large" fullWidth onClick={handleLogin}>
-          Sign In
+        <Button
+          sx={{ fontSize: '1.2 rem' }}
+          color="primary"
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={handleLogin}
+        >
+          تسجيل الدخول
         </Button>
       </Box>
       {subtitle}

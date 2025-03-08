@@ -1,25 +1,17 @@
-import { useState } from 'react';
-import { Box, Menu, Typography, Button, Divider, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { IconChevronDown, IconHelp } from '@tabler/icons';
-import AppLinks from './AppLinks';
-import QuickLinks from './QuickLinks';
-import React from 'react';
-
 const AppDD = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
+  // const [anchorEl2, setAnchorEl2] = useState(null);
 
-  const handleClick2 = (event: any) => {
-    setAnchorEl2(event.currentTarget);
-  };
+  // const handleClick2 = (event: any) => {
+  //   setAnchorEl2(event.currentTarget);
+  // };
 
-  const handleClose2 = () => {
-    setAnchorEl2(null);
-  };
+  // const handleClose2 = () => {
+  //   setAnchorEl2(null);
+  // };
 
   return (
     <>
-      <Box>
+      {/* <Box>
         <Button
           aria-label="show 11 new notifications"
           color="inherit"
@@ -36,9 +28,9 @@ const AppDD = () => {
           Apps
         </Button>
         {/* ------------------------------------------- */}
-        {/* Message Dropdown */}
-        {/* ------------------------------------------- */}
-        <Menu
+      {/* Message Dropdown */}
+      {/* ------------------------------------------- */}
+      {/* <Menu
           id="msgs-menu"
           anchorEl={anchorEl2}
           keepMounted
@@ -99,8 +91,8 @@ const AppDD = () => {
             </Grid>
           </Grid>
         </Menu>
-      </Box>
-      <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/chats" component={Link}>
+      </Box> */}
+      {/* <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/chats" component={Link}>
         Chat
       </Button>
       <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/calendar" component={Link}>
@@ -108,7 +100,7 @@ const AppDD = () => {
       </Button>
       <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/email" component={Link}>
         Email
-      </Button>
+      </Button> */}
     </>
   );
 };

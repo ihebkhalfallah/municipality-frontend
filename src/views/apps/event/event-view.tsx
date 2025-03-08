@@ -31,7 +31,6 @@ import {
   Snackbar,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { getDemandes, deleteDemande, updateDemande } from 'src/services/demandeService';
 import { getComments, addComment } from 'src/services/commentService';
 import {
   uploadDocuments,
@@ -45,16 +44,23 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import DemandeFilter, { DEMANDE_TYPE } from './DemandeFilter';
+import EventFilter, { EVENT_TYPE } from './EventFilter';
+import { deleteEvent, getEvents, updateEvent } from 'src/services/eventService';
 import { STATUS } from 'src/types/apps/status';
 
-interface Demande {
+// export enum EVENT_STATUS {
+//   PENDING = 'PENDING',
+//   ACCEPTED = 'ACCEPTED',
+//   REJECTED = 'REJECTED',
+// }
+
+interface Event {
   id: number;
   name: string;
   description: string;
   location: string;
   date: string;
-  type: DEMANDE_TYPE;
+  type: EVENT_TYPE;
   status: STATUS;
   createdBy: {
     firstName: string;
@@ -81,13 +87,13 @@ interface Document {
   uploadDate: string;
 }
 
-const DemandeView = () => {
+const EventView = () => {
   const { t } = useTranslation();
-  const [demandes, setDemandes] = useState<Demande[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [totalDemandes, setTotalDemandes] = useState(0);
-  const [selectedDemande, setSelectedDemande] = useState<Demande | null>(null);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
@@ -98,23 +104,23 @@ const DemandeView = () => {
     severity: 'success' | 'error' | 'info' | 'warning';
   } | null>(null);
 
-  const fetchDemandes = useCallback(
+  const fetchEvents = useCallback(
     async (filters = {}) => {
       try {
-        const response = await getDemandes(page + 1, rowsPerPage, filters);
-        setDemandes(response.data);
-        setTotalDemandes(response.total);
+        const response = await getEvents(page + 1, rowsPerPage, filters);
+        setEvents(response.data);
+        setTotalEvents(response.total);
       } catch (error) {
-        console.error('Error fetching demandes:', error);
-        setAlert({ message: 'Error fetching demandes', severity: 'error' });
+        console.error('Error fetching events:', error);
+        setAlert({ message: 'Error fetching events', severity: 'error' });
       }
     },
     [page, rowsPerPage],
   );
 
-  const fetchComments = useCallback(async (demandeId: number) => {
+  const fetchComments = useCallback(async (eventId: number) => {
     try {
-      const response = await getComments({ demandeId });
+      const response = await getComments({ eventId });
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -122,9 +128,9 @@ const DemandeView = () => {
     }
   }, []);
 
-  const fetchDocuments = useCallback(async (demandeId: number) => {
+  const fetchDocuments = useCallback(async (eventId: number) => {
     try {
-      const response = await getDocumentsByEntity('demande', demandeId);
+      const response = await getDocumentsByEntity('event', eventId);
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching documents:', error);
@@ -133,8 +139,8 @@ const DemandeView = () => {
   }, []);
 
   useEffect(() => {
-    fetchDemandes();
-  }, [fetchDemandes]);
+    fetchEvents();
+  }, [fetchEvents]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -147,50 +153,50 @@ const DemandeView = () => {
     setPage(0);
   };
 
-  const handleViewDemande = (demande: Demande) => {
-    setSelectedDemande(demande);
-    fetchComments(demande.id);
-    fetchDocuments(demande.id);
+  const handleViewEvent = (event: Event) => {
+    setSelectedEvent(event);
+    fetchComments(event.id);
+    fetchDocuments(event.id);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedDemande(null);
+    setSelectedEvent(null);
     setComments([]);
     setDocuments([]);
   };
 
-  const handleDeleteDemande = async (id: number) => {
+  const handleDeleteEvent = async (id: number) => {
     try {
-      await deleteDemande(id);
-      fetchDemandes();
-      setAlert({ message: 'Demande deleted successfully', severity: 'success' });
+      await deleteEvent(id);
+      fetchEvents();
+      setAlert({ message: 'Event deleted successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error deleting demande:', error);
-      setAlert({ message: 'Error deleting demande', severity: 'error' });
+      console.error('Error deleting event:', error);
+      setAlert({ message: 'Error deleting event', severity: 'error' });
     }
   };
 
-  const handleAcceptDemande = async (id: number) => {
+  const handleAcceptEvent = async (id: number) => {
     try {
-      await updateDemande(id, { status: STATUS.ACCEPTED });
-      fetchDemandes();
-      setAlert({ message: 'Demande accepted successfully', severity: 'success' });
+      await updateEvent(id, { status: STATUS.ACCEPTED });
+      fetchEvents();
+      setAlert({ message: 'Event accepted successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error accepting demande:', error);
-      setAlert({ message: 'Error accepting demande', severity: 'error' });
+      console.error('Error accepting event:', error);
+      setAlert({ message: 'Error accepting event', severity: 'error' });
     }
   };
 
-  const handleRejectDemande = async (id: number) => {
+  const handleRejectEvent = async (id: number) => {
     try {
-      await updateDemande(id, { status: STATUS.REJECTED });
-      fetchDemandes();
-      setAlert({ message: 'Demande rejected successfully', severity: 'success' });
+      await updateEvent(id, { status: STATUS.REJECTED });
+      fetchEvents();
+      setAlert({ message: 'Event rejected successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error rejecting demande:', error);
-      setAlert({ message: 'Error rejecting demande', severity: 'error' });
+      console.error('Error rejecting event:', error);
+      setAlert({ message: 'Error rejecting event', severity: 'error' });
     }
   };
 
@@ -200,13 +206,13 @@ const DemandeView = () => {
 
   const handleAddComment = async () => {
     try {
-      const newComment = await addComment('demande', selectedDemande?.id || 0, comment);
+      const newComment = await addComment('event', selectedEvent?.id || 0, comment);
       if (files.length > 0) {
         await uploadDocuments('comment', newComment.id, files);
       }
       setComment('');
       setFiles([]);
-      fetchComments(selectedDemande?.id || 0);
+      fetchComments(selectedEvent?.id || 0);
       setAlert({ message: 'Comment added successfully', severity: 'success' });
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -222,9 +228,9 @@ const DemandeView = () => {
 
   const handleUploadFiles = async () => {
     try {
-      if (selectedDemande) {
-        await uploadDocuments('demande', selectedDemande.id, files);
-        fetchDocuments(selectedDemande.id);
+      if (selectedEvent) {
+        await uploadDocuments('event', selectedEvent.id, files);
+        fetchDocuments(selectedEvent.id);
         setFiles([]);
         setAlert({ message: 'Files uploaded successfully', severity: 'success' });
       }
@@ -266,8 +272,8 @@ const DemandeView = () => {
   const handleDeleteDocument = async (documentId: number) => {
     try {
       await deleteDocument(documentId);
-      if (selectedDemande) {
-        fetchDocuments(selectedDemande.id);
+      if (selectedEvent) {
+        fetchDocuments(selectedEvent.id);
       }
       setAlert({ message: 'Document deleted successfully', severity: 'success' });
     } catch (error) {
@@ -277,7 +283,7 @@ const DemandeView = () => {
   };
 
   const handleFilter = (filters: any) => {
-    fetchDemandes(filters);
+    fetchEvents(filters);
   };
 
   const getTranslatedStatus = (status: STATUS) => {
@@ -292,9 +298,9 @@ const DemandeView = () => {
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
-        {t('Demandes')}
+        {t('Events')}
       </Typography>
-      <DemandeFilter onFilter={handleFilter} />
+      <EventFilter onFilter={handleFilter} />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -309,13 +315,13 @@ const DemandeView = () => {
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
                 align="center"
               >
-                {t('Location')}
+                {t('Description')}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
                 align="center"
               >
-                {t('Description')}
+                {t('Location')}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
@@ -344,43 +350,43 @@ const DemandeView = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {demandes.map((demande, index) => (
+            {events.map((event, index) => (
               <TableRow
-                key={demande.id}
+                key={event.id}
                 style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
               >
-                <TableCell align="center">{demande.name}</TableCell>
-                <TableCell align="center">{demande.description}</TableCell>
-                <TableCell align="center">{demande.location}</TableCell>
-                <TableCell align="center">{new Date(demande.date).toLocaleString()}</TableCell>
-                <TableCell align="center">{t(demande.type)}</TableCell>
-                <TableCell align="center">
+                <TableCell>{event.name}</TableCell>
+                <TableCell>{event.description}</TableCell>
+                <TableCell>{event.location}</TableCell>
+                <TableCell>{new Date(event.date).toLocaleString()}</TableCell>
+                <TableCell>{t(event.type)}</TableCell>
+                <TableCell>
                   <Chip
-                    label={getTranslatedStatus(demande.status)}
+                    label={getTranslatedStatus(event.status)}
                     color={
-                      demande.status === STATUS.ACCEPTED
+                      event.status === STATUS.ACCEPTED
                         ? 'success'
-                        : demande.status === STATUS.REJECTED
+                        : event.status === STATUS.REJECTED
                         ? 'error'
                         : 'warning'
                     }
                     sx={{ minWidth: 100 }}
                   />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell>
                   <Stack direction="row" spacing={1}>
-                    <Tooltip title={t('View Demande')}>
-                      <IconButton onClick={() => handleViewDemande(demande)}>
+                    <Tooltip title={t('View Event')}>
+                      <IconButton onClick={() => handleViewEvent(event)}>
                         <VisibilityIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('Delete Demande')}>
-                      <IconButton onClick={() => handleDeleteDemande(demande.id)}>
+                    <Tooltip title={t('Delete Event')}>
+                      <IconButton onClick={() => handleDeleteEvent(event.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('Accept Demande')}>
-                      <IconButton onClick={() => handleAcceptDemande(demande.id)}>
+                    <Tooltip title={t('Accept Event')}>
+                      <IconButton onClick={() => handleAcceptEvent(event.id)}>
                         <CheckCircleIcon />
                       </IconButton>
                     </Tooltip>
@@ -393,7 +399,7 @@ const DemandeView = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={totalDemandes}
+          count={totalEvents}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -402,7 +408,7 @@ const DemandeView = () => {
       </TableContainer>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
-        <DialogTitle sx={{ fontWeight: 600 }}>{t('Demande Details')}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 600 }}>{t('Event Details')}</DialogTitle>
         <DialogContent sx={{ zIndex: 1300 }}>
           {alert && (
             <Snackbar
@@ -426,25 +432,24 @@ const DemandeView = () => {
           <Card variant="outlined" sx={{ p: 2, mb: 2, zIndex: 1300 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                {selectedDemande?.name}
+                {selectedEvent?.name}
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Description')}:</strong> {selectedDemande?.description}
+                <strong>{t('Description')}:</strong> {selectedEvent?.description}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Location')}:</strong> {selectedDemande?.location}
+                <strong>{t('Location')}:</strong> {selectedEvent?.location}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Date')}:</strong>{' '}
-                {new Date(selectedDemande?.date || '').toLocaleString()}
+                <strong>{t('Date')}:</strong> {new Date(selectedEvent?.date || '').toLocaleString()}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Type')}:</strong> {selectedDemande?.type ? t(selectedDemande.type) : ''}
+                <strong>{t('Type')}:</strong> {selectedEvent?.type ? t(selectedEvent.type) : ''}
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 <strong>{t('Status')}:</strong>{' '}
-                {selectedDemande?.status ? t(selectedDemande.status) : ''}
+                {selectedEvent?.status ? t(selectedEvent.status) : ''}
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -453,17 +458,17 @@ const DemandeView = () => {
               <Stack direction="row" spacing={2} alignItems="center">
                 <Box>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Name')}:</strong> {selectedDemande?.createdBy?.firstName}{' '}
-                    {selectedDemande?.createdBy?.lastName}
+                    <strong>{t('Name')}:</strong> {selectedEvent?.createdBy?.firstName}{' '}
+                    {selectedEvent?.createdBy?.lastName}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Email')}:</strong> {selectedDemande?.createdBy.email}
+                    <strong>{t('Email')}:</strong> {selectedEvent?.createdBy.email}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Phone')}:</strong> {selectedDemande?.createdBy.phoneNumber}
+                    <strong>{t('Phone')}:</strong> {selectedEvent?.createdBy.phoneNumber}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Job')}:</strong> {selectedDemande?.createdBy.job}
+                    <strong>{t('Job')}:</strong> {selectedEvent?.createdBy.job}
                   </Typography>
                 </Box>
               </Stack>
@@ -526,7 +531,7 @@ const DemandeView = () => {
             {t('Upload Files')}
           </Button>
           <Button
-            onClick={() => handleDownloadAllDocuments('demande', selectedDemande?.id || 0)}
+            onClick={() => handleDownloadAllDocuments('event', selectedEvent?.id || 0)}
             variant="contained"
             color="secondary"
             sx={{ mt: 2, ml: 2 }}
@@ -570,14 +575,14 @@ const DemandeView = () => {
             {t('Close')}
           </Button>
           <Button
-            onClick={() => handleAcceptDemande(selectedDemande?.id || 0)}
+            onClick={() => handleAcceptEvent(selectedEvent?.id || 0)}
             variant="contained"
             color="primary"
           >
             {t('Accept')}
           </Button>
           <Button
-            onClick={() => handleRejectDemande(selectedDemande?.id || 0)}
+            onClick={() => handleRejectEvent(selectedEvent?.id || 0)}
             variant="contained"
             color="error"
           >
@@ -589,4 +594,4 @@ const DemandeView = () => {
   );
 };
 
-export default DemandeView;
+export default EventView;

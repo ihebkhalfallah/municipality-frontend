@@ -2,8 +2,8 @@ import React from 'react';
 import { Box } from '@mui/material';
 import Breadcrumb from 'src/layouts/full/shared/breadcrumb/Breadcrumb';
 import PageContainer from 'src/components/container/PageContainer';
-import ProductList from 'src/components/apps/ecommerce/productGrid/ProductList';
-import ProductSidebar from 'src/components/apps/ecommerce/productGrid/ProductSidebar';
+// import ProductList from 'src/components/apps/ecommerce/productGrid/ProductList';
+// import ProductSidebar from 'src/components/apps/ecommerce/productGrid/ProductSidebar';
 import AppCard from 'src/components/shared/AppCard';
 
 const BCrumb = [
@@ -26,15 +26,15 @@ const Ecommerce = () => {
         {/* ------------------------------------------- */}
         {/* Left part */}
         {/* ------------------------------------------- */}
-        <ProductSidebar
+        {/* <ProductSidebar
           isMobileSidebarOpen={isMobileSidebarOpen}
           onSidebarClose={() => setMobileSidebarOpen(false)}
-        />
+        /> */}
         {/* ------------------------------------------- */}
         {/* Right part */}
         {/* ------------------------------------------- */}
         <Box p={3} flexGrow={1}>
-          <ProductList onClick={() => setMobileSidebarOpen(!isMobileSidebarOpen)} />
+          {/* <ProductList onClick={() => setMobileSidebarOpen(!isMobileSidebarOpen)} /> */}
         </Box>
       </AppCard>
     </PageContainer>

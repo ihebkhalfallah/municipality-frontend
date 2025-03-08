@@ -3,14 +3,15 @@ import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import DemandeView from 'src/views/apps/demande/demande-view';
 import { getToken } from 'src/services/authService';
+import EventView from 'src/views/apps/event/event-view';
+import AuthorizationView from 'src/views/apps/authorization/AuthorizationView';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
 
 /* ****Pages***** */
-const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
-const EcommerceDash = Loadable(lazy(() => import('../views/dashboard/Ecommerce')));
+// const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
 
 /* ****Apps***** */
 const Blog = Loadable(lazy(() => import('../views/apps/blog/Blog')));
@@ -125,16 +126,16 @@ const Router = [
     path: '/',
     element: <FullLayout />,
     children: [
-      { path: '/', element: <Navigate to="/dashboards/modern" /> },
-      {
-        path: '/dashboards/modern',
-        exact: true,
-        element: (
-          <PrivateRoute>
-            <ModernDash />
-          </PrivateRoute>
-        ),
-      },
+      { path: '/', element: <Navigate to="/dashboards/demandes" /> },
+      // {
+      //   path: '/dashboards/modern',
+      //   exact: true,
+      //   element: (
+      //     <PrivateRoute>
+      //       <ModernDash />
+      //     </PrivateRoute>
+      //   ),
+      // },
       {
         path: '/dashboards/demandes',
         exact: true,
@@ -145,11 +146,20 @@ const Router = [
         ),
       },
       {
-        path: '/dashboards/ecommerce',
+        path: '/dashboards/events',
         exact: true,
         element: (
           <PrivateRoute>
-            <EcommerceDash />
+            <EventView />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/dashboards/authorizations',
+        exact: true,
+        element: (
+          <PrivateRoute>
+            <AuthorizationView />
           </PrivateRoute>
         ),
       },

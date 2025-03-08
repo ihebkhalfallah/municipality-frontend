@@ -31,7 +31,6 @@ import {
   Snackbar,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { getDemandes, deleteDemande, updateDemande } from 'src/services/demandeService';
 import { getComments, addComment } from 'src/services/commentService';
 import {
   uploadDocuments,
@@ -45,16 +44,21 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import DemandeFilter, { DEMANDE_TYPE } from './DemandeFilter';
+import {
+  getAuthorizations,
+  deleteAuthorization,
+  updateAuthorization,
+} from 'src/services/authorizationService';
+import AuthorizationFilter from './AuthorizationFilter';
 import { STATUS } from 'src/types/apps/status';
 
-interface Demande {
+interface Authorization {
   id: number;
   name: string;
   description: string;
   location: string;
-  date: string;
-  type: DEMANDE_TYPE;
+  start_date: string;
+  end_date: string;
   status: STATUS;
   createdBy: {
     firstName: string;
@@ -81,13 +85,13 @@ interface Document {
   uploadDate: string;
 }
 
-const DemandeView = () => {
+const AuthorizationView = () => {
   const { t } = useTranslation();
-  const [demandes, setDemandes] = useState<Demande[]>([]);
+  const [authorizations, setAuthorizations] = useState<Authorization[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [totalDemandes, setTotalDemandes] = useState(0);
-  const [selectedDemande, setSelectedDemande] = useState<Demande | null>(null);
+  const [totalAuthorizations, setTotalAuthorizations] = useState(0);
+  const [selectedAuthorization, setSelectedAuthorization] = useState<Authorization | null>(null);
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
@@ -98,23 +102,23 @@ const DemandeView = () => {
     severity: 'success' | 'error' | 'info' | 'warning';
   } | null>(null);
 
-  const fetchDemandes = useCallback(
+  const fetchAuthorizations = useCallback(
     async (filters = {}) => {
       try {
-        const response = await getDemandes(page + 1, rowsPerPage, filters);
-        setDemandes(response.data);
-        setTotalDemandes(response.total);
+        const response = await getAuthorizations(page + 1, rowsPerPage, filters);
+        setAuthorizations(response.data);
+        setTotalAuthorizations(response.total);
       } catch (error) {
-        console.error('Error fetching demandes:', error);
-        setAlert({ message: 'Error fetching demandes', severity: 'error' });
+        console.error('Error fetching authorizations:', error);
+        setAlert({ message: 'Error fetching authorizations', severity: 'error' });
       }
     },
     [page, rowsPerPage],
   );
 
-  const fetchComments = useCallback(async (demandeId: number) => {
+  const fetchComments = useCallback(async (authorizationId: number) => {
     try {
-      const response = await getComments({ demandeId });
+      const response = await getComments({ authorizationId });
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -122,9 +126,9 @@ const DemandeView = () => {
     }
   }, []);
 
-  const fetchDocuments = useCallback(async (demandeId: number) => {
+  const fetchDocuments = useCallback(async (authorizationId: number) => {
     try {
-      const response = await getDocumentsByEntity('demande', demandeId);
+      const response = await getDocumentsByEntity('authorization', authorizationId);
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching documents:', error);
@@ -133,8 +137,8 @@ const DemandeView = () => {
   }, []);
 
   useEffect(() => {
-    fetchDemandes();
-  }, [fetchDemandes]);
+    fetchAuthorizations();
+  }, [fetchAuthorizations]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
@@ -147,50 +151,50 @@ const DemandeView = () => {
     setPage(0);
   };
 
-  const handleViewDemande = (demande: Demande) => {
-    setSelectedDemande(demande);
-    fetchComments(demande.id);
-    fetchDocuments(demande.id);
+  const handleViewAuthorization = (authorization: Authorization) => {
+    setSelectedAuthorization(authorization);
+    fetchComments(authorization.id);
+    fetchDocuments(authorization.id);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedDemande(null);
+    setSelectedAuthorization(null);
     setComments([]);
     setDocuments([]);
   };
 
-  const handleDeleteDemande = async (id: number) => {
+  const handleDeleteAuthorization = async (id: number) => {
     try {
-      await deleteDemande(id);
-      fetchDemandes();
-      setAlert({ message: 'Demande deleted successfully', severity: 'success' });
+      await deleteAuthorization(id);
+      fetchAuthorizations();
+      setAlert({ message: 'Authorization deleted successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error deleting demande:', error);
-      setAlert({ message: 'Error deleting demande', severity: 'error' });
+      console.error('Error deleting authorization:', error);
+      setAlert({ message: 'Error deleting authorization', severity: 'error' });
     }
   };
 
-  const handleAcceptDemande = async (id: number) => {
+  const handleAcceptAuthorization = async (id: number) => {
     try {
-      await updateDemande(id, { status: STATUS.ACCEPTED });
-      fetchDemandes();
-      setAlert({ message: 'Demande accepted successfully', severity: 'success' });
+      await updateAuthorization(id, { status: STATUS.ACCEPTED });
+      fetchAuthorizations();
+      setAlert({ message: 'Authorization accepted successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error accepting demande:', error);
-      setAlert({ message: 'Error accepting demande', severity: 'error' });
+      console.error('Error accepting authorization:', error);
+      setAlert({ message: 'Error accepting authorization', severity: 'error' });
     }
   };
 
-  const handleRejectDemande = async (id: number) => {
+  const handleRejectAuthorization = async (id: number) => {
     try {
-      await updateDemande(id, { status: STATUS.REJECTED });
-      fetchDemandes();
-      setAlert({ message: 'Demande rejected successfully', severity: 'success' });
+      await updateAuthorization(id, { status: STATUS.REJECTED });
+      fetchAuthorizations();
+      setAlert({ message: 'Authorization rejected successfully', severity: 'success' });
     } catch (error) {
-      console.error('Error rejecting demande:', error);
-      setAlert({ message: 'Error rejecting demande', severity: 'error' });
+      console.error('Error rejecting authorization:', error);
+      setAlert({ message: 'Error rejecting authorization', severity: 'error' });
     }
   };
 
@@ -200,13 +204,13 @@ const DemandeView = () => {
 
   const handleAddComment = async () => {
     try {
-      const newComment = await addComment('demande', selectedDemande?.id || 0, comment);
+      const newComment = await addComment('authorization', selectedAuthorization?.id || 0, comment);
       if (files.length > 0) {
         await uploadDocuments('comment', newComment.id, files);
       }
       setComment('');
       setFiles([]);
-      fetchComments(selectedDemande?.id || 0);
+      fetchComments(selectedAuthorization?.id || 0);
       setAlert({ message: 'Comment added successfully', severity: 'success' });
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -222,9 +226,9 @@ const DemandeView = () => {
 
   const handleUploadFiles = async () => {
     try {
-      if (selectedDemande) {
-        await uploadDocuments('demande', selectedDemande.id, files);
-        fetchDocuments(selectedDemande.id);
+      if (selectedAuthorization) {
+        await uploadDocuments('authorization', selectedAuthorization.id, files);
+        fetchDocuments(selectedAuthorization.id);
         setFiles([]);
         setAlert({ message: 'Files uploaded successfully', severity: 'success' });
       }
@@ -266,8 +270,8 @@ const DemandeView = () => {
   const handleDeleteDocument = async (documentId: number) => {
     try {
       await deleteDocument(documentId);
-      if (selectedDemande) {
-        fetchDocuments(selectedDemande.id);
+      if (selectedAuthorization) {
+        fetchDocuments(selectedAuthorization.id);
       }
       setAlert({ message: 'Document deleted successfully', severity: 'success' });
     } catch (error) {
@@ -277,9 +281,8 @@ const DemandeView = () => {
   };
 
   const handleFilter = (filters: any) => {
-    fetchDemandes(filters);
+    fetchAuthorizations(filters);
   };
-
   const getTranslatedStatus = (status: STATUS) => {
     const statusMap: Record<STATUS, string> = {
       [STATUS.PENDING]: t('Pending'),
@@ -292,9 +295,9 @@ const DemandeView = () => {
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
-        {t('Demandes')}
+        {t('Authorizations')}
       </Typography>
-      <DemandeFilter onFilter={handleFilter} />
+      <AuthorizationFilter onFilter={handleFilter} />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -309,25 +312,25 @@ const DemandeView = () => {
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
                 align="center"
               >
-                {t('Location')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
                 {t('Description')}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
                 align="center"
               >
-                {t('Date')}
+                {t('Location')}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
                 align="center"
               >
-                {t('Type')}
+                {t('Start Date')}
+              </TableCell>
+              <TableCell
+                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                align="center"
+              >
+                {t('End Date')}
               </TableCell>
               <TableCell
                 sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
@@ -344,43 +347,43 @@ const DemandeView = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {demandes.map((demande, index) => (
+            {authorizations.map((authorization, index) => (
               <TableRow
-                key={demande.id}
+                key={authorization.id}
                 style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
               >
-                <TableCell align="center">{demande.name}</TableCell>
-                <TableCell align="center">{demande.description}</TableCell>
-                <TableCell align="center">{demande.location}</TableCell>
-                <TableCell align="center">{new Date(demande.date).toLocaleString()}</TableCell>
-                <TableCell align="center">{t(demande.type)}</TableCell>
-                <TableCell align="center">
+                <TableCell>{authorization.name}</TableCell>
+                <TableCell>{authorization.description}</TableCell>
+                <TableCell>{authorization.location}</TableCell>
+                <TableCell>{new Date(authorization.start_date).toLocaleString()}</TableCell>
+                <TableCell>{new Date(authorization.end_date).toLocaleString()}</TableCell>
+                <TableCell>
                   <Chip
-                    label={getTranslatedStatus(demande.status)}
+                    label={getTranslatedStatus(authorization.status)}
                     color={
-                      demande.status === STATUS.ACCEPTED
+                      authorization.status === STATUS.ACCEPTED
                         ? 'success'
-                        : demande.status === STATUS.REJECTED
+                        : authorization.status === STATUS.REJECTED
                         ? 'error'
                         : 'warning'
                     }
                     sx={{ minWidth: 100 }}
                   />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell>
                   <Stack direction="row" spacing={1}>
-                    <Tooltip title={t('View Demande')}>
-                      <IconButton onClick={() => handleViewDemande(demande)}>
+                    <Tooltip title={t('View Authorization')}>
+                      <IconButton onClick={() => handleViewAuthorization(authorization)}>
                         <VisibilityIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('Delete Demande')}>
-                      <IconButton onClick={() => handleDeleteDemande(demande.id)}>
+                    <Tooltip title={t('Delete Authorization')}>
+                      <IconButton onClick={() => handleDeleteAuthorization(authorization.id)}>
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={t('Accept Demande')}>
-                      <IconButton onClick={() => handleAcceptDemande(demande.id)}>
+                    <Tooltip title={t('Accept Authorization')}>
+                      <IconButton onClick={() => handleAcceptAuthorization(authorization.id)}>
                         <CheckCircleIcon />
                       </IconButton>
                     </Tooltip>
@@ -393,7 +396,7 @@ const DemandeView = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={totalDemandes}
+          count={totalAuthorizations}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -402,7 +405,7 @@ const DemandeView = () => {
       </TableContainer>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
-        <DialogTitle sx={{ fontWeight: 600 }}>{t('Demande Details')}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 600 }}>{t('Authorization Details')}</DialogTitle>
         <DialogContent sx={{ zIndex: 1300 }}>
           {alert && (
             <Snackbar
@@ -426,25 +429,26 @@ const DemandeView = () => {
           <Card variant="outlined" sx={{ p: 2, mb: 2, zIndex: 1300 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                {selectedDemande?.name}
+                {selectedAuthorization?.name}
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Description')}:</strong> {selectedDemande?.description}
+                <strong>{t('Description')}:</strong> {selectedAuthorization?.description}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Location')}:</strong> {selectedDemande?.location}
+                <strong>{t('Location')}:</strong> {selectedAuthorization?.location}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Date')}:</strong>{' '}
-                {new Date(selectedDemande?.date || '').toLocaleString()}
+                <strong>{t('Start Date')}:</strong>{' '}
+                {new Date(selectedAuthorization?.start_date || '').toLocaleString()}
               </Typography>
               <Typography variant="body1" color="textSecondary">
-                <strong>{t('Type')}:</strong> {selectedDemande?.type ? t(selectedDemande.type) : ''}
+                <strong>{t('End Date')}:</strong>{' '}
+                {new Date(selectedAuthorization?.end_date || '').toLocaleString()}
               </Typography>
               <Typography variant="body1" color="textSecondary">
                 <strong>{t('Status')}:</strong>{' '}
-                {selectedDemande?.status ? t(selectedDemande.status) : ''}
+                {selectedAuthorization?.status ? t(selectedAuthorization.status) : ''}
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -453,17 +457,17 @@ const DemandeView = () => {
               <Stack direction="row" spacing={2} alignItems="center">
                 <Box>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Name')}:</strong> {selectedDemande?.createdBy?.firstName}{' '}
-                    {selectedDemande?.createdBy?.lastName}
+                    <strong>{t('Name')}:</strong> {selectedAuthorization?.createdBy?.firstName}{' '}
+                    {selectedAuthorization?.createdBy?.lastName}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Email')}:</strong> {selectedDemande?.createdBy.email}
+                    <strong>{t('Email')}:</strong> {selectedAuthorization?.createdBy.email}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Phone')}:</strong> {selectedDemande?.createdBy.phoneNumber}
+                    <strong>{t('Phone')}:</strong> {selectedAuthorization?.createdBy.phoneNumber}
                   </Typography>
                   <Typography variant="body1" color="textSecondary">
-                    <strong>{t('Job')}:</strong> {selectedDemande?.createdBy.job}
+                    <strong>{t('Job')}:</strong> {selectedAuthorization?.createdBy.job}
                   </Typography>
                 </Box>
               </Stack>
@@ -526,7 +530,9 @@ const DemandeView = () => {
             {t('Upload Files')}
           </Button>
           <Button
-            onClick={() => handleDownloadAllDocuments('demande', selectedDemande?.id || 0)}
+            onClick={() =>
+              handleDownloadAllDocuments('authorization', selectedAuthorization?.id || 0)
+            }
             variant="contained"
             color="secondary"
             sx={{ mt: 2, ml: 2 }}
@@ -570,14 +576,14 @@ const DemandeView = () => {
             {t('Close')}
           </Button>
           <Button
-            onClick={() => handleAcceptDemande(selectedDemande?.id || 0)}
+            onClick={() => handleAcceptAuthorization(selectedAuthorization?.id || 0)}
             variant="contained"
             color="primary"
           >
             {t('Accept')}
           </Button>
           <Button
-            onClick={() => handleRejectDemande(selectedDemande?.id || 0)}
+            onClick={() => handleRejectAuthorization(selectedAuthorization?.id || 0)}
             variant="contained"
             color="error"
           >
@@ -589,4 +595,4 @@ const DemandeView = () => {
   );
 };
 
-export default DemandeView;
+export default AuthorizationView;

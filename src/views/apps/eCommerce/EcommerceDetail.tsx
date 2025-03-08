@@ -1,10 +1,10 @@
 import { Grid } from '@mui/material';
-import ProductCarousel from 'src/components/apps/ecommerce/productDetail/ProductCarousel';
+// import ProductCarousel from 'src/components/apps/ecommerce/productDetail/ProductCarousel';
 import Breadcrumb from 'src/layouts/full/shared/breadcrumb/Breadcrumb';
 import PageContainer from 'src/components/container/PageContainer';
-import ProductDetail from 'src/components/apps/ecommerce/productDetail/ProductDetail';
-import ProductDesc from 'src/components/apps/ecommerce/productDetail/ProductDesc';
-import ProductRelated from 'src/components/apps/ecommerce/productDetail/ProductRelated';
+// import ProductDetail from 'src/components/apps/ecommerce/productDetail/ProductDetail';
+// import ProductDesc from 'src/components/apps/ecommerce/productDetail/ProductDesc';
+// import ProductRelated from 'src/components/apps/ecommerce/productDetail/ProductRelated';
 import ChildCard from 'src/components/shared/ChildCard';
 import React from 'react';
 
@@ -35,19 +35,20 @@ const EcommerceDetail = () => {
             {/* ------------------------------------------- */}
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12} lg={6}>
-                <ProductCarousel />
+                {/* <ProductCarousel /> */}
+                <div>hello</div>
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ProductDetail />
+                <div>hello</div>
               </Grid>
             </Grid>
           </ChildCard>
         </Grid>
         <Grid item xs={12} sm={12} lg={12}>
-          <ProductDesc />
+          <div>hello</div>
         </Grid>
         <Grid item xs={12} sm={12} lg={12}>
-          <ProductRelated />
+          <div>hello</div>
         </Grid>
       </Grid>
     </PageContainer>

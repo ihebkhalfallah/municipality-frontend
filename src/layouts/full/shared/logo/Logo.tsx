@@ -14,7 +14,9 @@ const Logo: FC = () => {
     height: customizer.TopbarHeight,
     width: customizer.isCollapse ? '40px' : '180px',
     overflow: 'hidden',
-    display: 'block',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   }));
 
   if (customizer.activeDir === 'ltr') {

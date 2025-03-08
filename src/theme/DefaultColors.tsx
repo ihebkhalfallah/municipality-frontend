@@ -2,12 +2,12 @@ const baselightTheme = {
   direction: 'ltr',
   palette: {
     primary: {
-      main: '#5D87FF',
+      main: '#020039',
       light: '#ECF2FF',
       dark: '#4570EA',
     },
     secondary: {
-      main: '#49BEFF',
+      main: '#5D87FF',
       light: '#E8F7FF',
       dark: '#23afdb',
     },
@@ -24,7 +24,7 @@ const baselightTheme = {
       contrastText: '#ffffff',
     },
     error: {
-      main: '#FA896B',
+      main: '#e5383b',
       light: '#FDEDE8',
       dark: '#f3704d',
       contrastText: '#ffffff',
@@ -68,7 +68,7 @@ const baseDarkTheme = {
   direction: 'ltr',
   palette: {
     primary: {
-      main: '#5D87FF',
+      main: '#020039',
       light: '#ECF2FF',
       dark: '#4570EA',
     },

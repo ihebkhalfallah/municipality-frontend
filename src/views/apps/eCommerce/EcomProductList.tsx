@@ -1,7 +1,7 @@
 import React from 'react';
 import Breadcrumb from 'src/layouts/full/shared/breadcrumb/Breadcrumb';
 import PageContainer from 'src/components/container/PageContainer';
-import ProductTableList from 'src/components/apps/ecommerce/ProductTableList/ProductTableList';
+// import ProductTableList from 'src/components/apps/ecommerce/ProductTableList/ProductTableList';
 import BlankCard from 'src/components/shared/BlankCard';
 
 const BCrumb = [
@@ -23,7 +23,8 @@ const EcomProductList = () => {
         {/* ------------------------------------------- */}
         {/* Left part */}
         {/* ------------------------------------------- */}
-        <ProductTableList />
+        {/* <ProductTableList /> */}
+        <div>hello</div>
       </BlankCard>
     </PageContainer>
   );

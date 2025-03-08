@@ -29,7 +29,7 @@ const initialState: StateType = {
   isSidebarHover: false,
   isMobileSidebar: false,
   isHorizontal: false,
-  isLanguage: 'en',
+  isLanguage: 'ar',
   isCardShadow: true,
   borderRadius: 7,
 };

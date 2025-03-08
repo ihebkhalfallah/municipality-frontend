@@ -1,36 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Avatar, IconButton, Menu, MenuItem, Typography, Stack } from '@mui/material';
 import { useSelector, useDispatch } from 'src/store/Store';
 import { setLanguage } from 'src/store/customizer/CustomizerSlice';
 import FlagEn from 'src/assets/images/flag/icon-flag-en.svg';
 import FlagFr from 'src/assets/images/flag/icon-flag-fr.svg';
-import FlagCn from 'src/assets/images/flag/icon-flag-cn.svg';
 import FlagSa from 'src/assets/images/flag/icon-flag-sa.svg';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
 import { AppState } from 'src/store/Store';
 
 const Languages = [
+  {
+    flagname: 'عربي (Arabic)',
+    icon: FlagSa,
+    value: 'ar',
+  },
   {
     flagname: 'English (UK)',
     icon: FlagEn,
     value: 'en',
   },
-  // {
-  //   flagname: '中国人 (Chinese)',
-  //   icon: FlagCn,
-  //   value: 'ch',
-  // },
   {
     flagname: 'français (French)',
     icon: FlagFr,
     value: 'fr',
-  },
-
-  {
-    flagname: 'عربي (Arabic)',
-    icon: FlagSa,
-    value: 'ar',
   },
 ];
 
@@ -40,16 +32,21 @@ const Language = () => {
   const open = Boolean(anchorEl);
   const customizer = useSelector((state: AppState) => state.customizer);
   const currentLang =
-    Languages.find((_lang) => _lang.value === customizer.isLanguage) || Languages[1];
+    Languages.find((lang) => lang.value === customizer.isLanguage) || Languages[0];
   const { i18n } = useTranslation();
+
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   useEffect(() => {
-    i18n.changeLanguage(customizer.isLanguage);
+    const defaultLanguage = customizer.isLanguage || 'ar';
+    i18n.changeLanguage(defaultLanguage);
+    dispatch(setLanguage(defaultLanguage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
