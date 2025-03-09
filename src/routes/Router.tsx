@@ -14,12 +14,8 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')))
 // const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
 
 /* ****Apps***** */
-const Blog = Loadable(lazy(() => import('../views/apps/blog/Blog')));
-const BlogDetail = Loadable(lazy(() => import('../views/apps/blog/BlogPost')));
-const Contacts = Loadable(lazy(() => import('../views/apps/contacts/Contacts')));
-const Chats = Loadable(lazy(() => import('../views/apps/chat/Chat')));
+
 const Notes = Loadable(lazy(() => import('../views/apps/notes/Notes')));
-const Tickets = Loadable(lazy(() => import('../views/apps/tickets/Tickets')));
 const Ecommerce = Loadable(lazy(() => import('../views/apps/eCommerce/Ecommerce')));
 const EcommerceDetail = Loadable(lazy(() => import('../views/apps/eCommerce/EcommerceDetail')));
 const EcomProductList = Loadable(lazy(() => import('../views/apps/eCommerce/EcomProductList')));
@@ -31,7 +27,6 @@ const UserProfile = Loadable(lazy(() => import('../views/apps/user-profile/UserP
 const Followers = Loadable(lazy(() => import('../views/apps/user-profile/Followers')));
 const Friends = Loadable(lazy(() => import('../views/apps/user-profile/Friends')));
 const Gallery = Loadable(lazy(() => import('../views/apps/user-profile/Gallery')));
-const Email = Loadable(lazy(() => import('../views/apps/email/Email')));
 
 // ui components
 const MuiAlert = Loadable(lazy(() => import('../views/ui-components/MuiAlert')));
@@ -164,58 +159,10 @@ const Router = [
         ),
       },
       {
-        path: '/apps/contacts',
-        element: (
-          <PrivateRoute>
-            <Contacts />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/apps/blog/posts',
-        element: (
-          <PrivateRoute>
-            <Blog />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/apps/blog/detail/:id',
-        element: (
-          <PrivateRoute>
-            <BlogDetail />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/apps/chats',
-        element: (
-          <PrivateRoute>
-            <Chats />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/apps/email',
-        element: (
-          <PrivateRoute>
-            <Email />
-          </PrivateRoute>
-        ),
-      },
-      {
         path: '/apps/notes',
         element: (
           <PrivateRoute>
             <Notes />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: '/apps/tickets',
-        element: (
-          <PrivateRoute>
-            <Tickets />
           </PrivateRoute>
         ),
       },
