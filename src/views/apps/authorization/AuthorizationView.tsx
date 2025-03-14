@@ -115,7 +115,7 @@ const AuthorizationView = () => {
         setTotalAuthorizations(response.total);
       } catch (error) {
         console.error('Error fetching authorizations:', error);
-        setAlert({ message: 'Error fetching authorizations', severity: 'error' });
+        setAlert({ message: t('ErrorFetchingAuthorizations'), severity: 'error' });
       }
     },
     [page, rowsPerPage],
@@ -127,7 +127,7 @@ const AuthorizationView = () => {
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
-      setAlert({ message: 'Error fetching comments', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
     }
   }, []);
 
@@ -137,7 +137,7 @@ const AuthorizationView = () => {
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching documents:', error);
-      setAlert({ message: 'Error fetching documents', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
     }
   }, []);
 
@@ -174,10 +174,10 @@ const AuthorizationView = () => {
     try {
       await deleteAuthorization(id);
       fetchAuthorizations();
-      setAlert({ message: 'Authorization deleted successfully', severity: 'success' });
+      setAlert({ message: t('AuthorizationDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting authorization:', error);
-      setAlert({ message: 'Error deleting authorization', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingAuthorization'), severity: 'error' });
     }
   };
 
@@ -185,10 +185,10 @@ const AuthorizationView = () => {
     try {
       await updateAuthorization(id, { status: STATUS.ACCEPTED });
       fetchAuthorizations();
-      setAlert({ message: 'Authorization accepted successfully', severity: 'success' });
+      setAlert({ message: t('AuthorizationAcceptedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error accepting authorization:', error);
-      setAlert({ message: 'Error accepting authorization', severity: 'error' });
+      setAlert({ message: t('ErrorAcceptingAuthorization'), severity: 'error' });
     }
   };
 
@@ -196,10 +196,10 @@ const AuthorizationView = () => {
     try {
       await updateAuthorization(id, { status: STATUS.REJECTED });
       fetchAuthorizations();
-      setAlert({ message: 'Authorization rejected successfully', severity: 'success' });
+      setAlert({ message: t('AuthorizationRejectedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error rejecting authorization:', error);
-      setAlert({ message: 'Error rejecting authorization', severity: 'error' });
+      setAlert({ message: t('ErrorRejectingAuthorization'), severity: 'error' });
     }
   };
 
@@ -216,10 +216,10 @@ const AuthorizationView = () => {
       setComment('');
       setFiles([]);
       fetchComments(selectedAuthorization?.id || 0);
-      setAlert({ message: 'Comment added successfully', severity: 'success' });
+      setAlert({ message: t('CommentAddedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error adding comment:', error);
-      setAlert({ message: 'Error adding comment', severity: 'error' });
+      setAlert({ message: t('ErrorAddingComment'), severity: 'error' });
     }
   };
 
@@ -235,7 +235,7 @@ const AuthorizationView = () => {
         await uploadDocuments('authorization', selectedAuthorization.id, files);
         fetchDocuments(selectedAuthorization.id);
         setFiles([]);
-        setAlert({ message: 'Files uploaded successfully', severity: 'success' });
+        setAlert({ message: t('FilesUploadedSuccessfully'), severity: 'success' });
       }
     } catch (error) {
       setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
@@ -253,7 +253,7 @@ const AuthorizationView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading document:', error);
-      setAlert({ message: 'Error downloading document', severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocument'), severity: 'error' });
     }
   };
 
@@ -268,7 +268,7 @@ const AuthorizationView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading documents:', error);
-      setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocuments'), severity: 'error' });
     }
   };
 
@@ -278,10 +278,10 @@ const AuthorizationView = () => {
       if (selectedAuthorization) {
         fetchDocuments(selectedAuthorization.id);
       }
-      setAlert({ message: 'Document deleted successfully', severity: 'success' });
+      setAlert({ message: t('DocumentDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting document:', error);
-      setAlert({ message: 'Error deleting document', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingDocument'), severity: 'error' });
     }
   };
 
@@ -620,6 +620,24 @@ const AuthorizationView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {alert && (
+        <Snackbar
+          open
+          autoHideDuration={6000}
+          onClose={() => setAlert(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ zIndex: 9999 }}
+        >
+          <Alert
+            variant="filled"
+            onClose={() => setAlert(null)}
+            severity={alert.severity}
+            sx={{ width: '100%', zIndex: 9999 }}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };

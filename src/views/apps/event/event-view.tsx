@@ -116,7 +116,7 @@ const EventView = () => {
         setTotalEvents(response.total);
       } catch (error) {
         console.error('Error fetching events:', error);
-        setAlert({ message: 'Error fetching events', severity: 'error' });
+        setAlert({ message: t('ErrorFetchingEvents'), severity: 'error' });
       }
     },
     [page, rowsPerPage],
@@ -128,7 +128,7 @@ const EventView = () => {
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
-      setAlert({ message: 'Error fetching comments', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
     }
   }, []);
 
@@ -138,7 +138,7 @@ const EventView = () => {
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching documents:', error);
-      setAlert({ message: 'Error fetching documents', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
     }
   }, []);
 
@@ -175,10 +175,10 @@ const EventView = () => {
     try {
       await deleteEvent(id);
       fetchEvents();
-      setAlert({ message: 'Event deleted successfully', severity: 'success' });
+      setAlert({ message: t('EventDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting event:', error);
-      setAlert({ message: 'Error deleting event', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingEvent'), severity: 'error' });
     }
   };
 
@@ -186,10 +186,10 @@ const EventView = () => {
     try {
       await updateEvent(id, { status: STATUS.ACCEPTED });
       fetchEvents();
-      setAlert({ message: 'Event accepted successfully', severity: 'success' });
+      setAlert({ message: t('EventAcceptedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error accepting event:', error);
-      setAlert({ message: 'Error accepting event', severity: 'error' });
+      setAlert({ message: t('ErrorAcceptingEvent'), severity: 'error' });
     }
   };
 
@@ -197,10 +197,10 @@ const EventView = () => {
     try {
       await updateEvent(id, { status: STATUS.REJECTED });
       fetchEvents();
-      setAlert({ message: 'Event rejected successfully', severity: 'success' });
+      setAlert({ message: t('EventRejectedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error rejecting event:', error);
-      setAlert({ message: 'Error rejecting event', severity: 'error' });
+      setAlert({ message: t('ErrorRejectingEvent'), severity: 'error' });
     }
   };
 
@@ -217,10 +217,10 @@ const EventView = () => {
       setComment('');
       setFiles([]);
       fetchComments(selectedEvent?.id || 0);
-      setAlert({ message: 'Comment added successfully', severity: 'success' });
+      setAlert({ message: t('CommentAddedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error adding comment:', error);
-      setAlert({ message: 'Error adding comment', severity: 'error' });
+      setAlert({ message: t('ErrorAddingComment'), severity: 'error' });
     }
   };
 
@@ -236,7 +236,7 @@ const EventView = () => {
         await uploadDocuments('event', selectedEvent.id, files);
         fetchDocuments(selectedEvent.id);
         setFiles([]);
-        setAlert({ message: 'Files uploaded successfully', severity: 'success' });
+        setAlert({ message: t('FilesUploadedSuccessfully'), severity: 'success' });
       }
     } catch (error) {
       setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
@@ -254,7 +254,7 @@ const EventView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading document:', error);
-      setAlert({ message: 'Error downloading document', severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocument'), severity: 'error' });
     }
   };
 
@@ -269,7 +269,7 @@ const EventView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading documents:', error);
-      setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocuments'), severity: 'error' });
     }
   };
 
@@ -279,10 +279,10 @@ const EventView = () => {
       if (selectedEvent) {
         fetchDocuments(selectedEvent.id);
       }
-      setAlert({ message: 'Document deleted successfully', severity: 'success' });
+      setAlert({ message: t('DocumentDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting document:', error);
-      setAlert({ message: 'Error deleting document', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingDocument'), severity: 'error' });
     }
   };
 
@@ -613,6 +613,24 @@ const EventView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {alert && (
+        <Snackbar
+          open
+          autoHideDuration={6000}
+          onClose={() => setAlert(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ zIndex: 9999 }}
+        >
+          <Alert
+            variant="filled"
+            onClose={() => setAlert(null)}
+            severity={alert.severity}
+            sx={{ width: '100%', zIndex: 9999 }}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };

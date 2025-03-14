@@ -110,7 +110,7 @@ const DemandeView = () => {
         setTotalDemandes(response.total);
       } catch (error) {
         console.error('Error fetching demandes:', error);
-        setAlert({ message: 'Error fetching demandes', severity: 'error' });
+        setAlert({ message: t('ErrorFetchingDemandes'), severity: 'error' });
       }
     },
     [page, rowsPerPage],
@@ -122,7 +122,7 @@ const DemandeView = () => {
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
-      setAlert({ message: 'Error fetching comments', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
     }
   }, []);
 
@@ -132,7 +132,7 @@ const DemandeView = () => {
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching documents:', error);
-      setAlert({ message: 'Error fetching documents', severity: 'error' });
+      setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
     }
   }, []);
 
@@ -169,10 +169,10 @@ const DemandeView = () => {
     try {
       await deleteDemande(id);
       fetchDemandes();
-      setAlert({ message: 'Demande deleted successfully', severity: 'success' });
+      setAlert({ message: t('DemandeDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting demande:', error);
-      setAlert({ message: 'Error deleting demande', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingDemande'), severity: 'error' });
     }
   };
 
@@ -180,10 +180,10 @@ const DemandeView = () => {
     try {
       await updateDemande(id, { status: STATUS.ACCEPTED });
       fetchDemandes();
-      setAlert({ message: 'Demande accepted successfully', severity: 'success' });
+      setAlert({ message: t('DemandeAcceptedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error accepting demande:', error);
-      setAlert({ message: 'Error accepting demande', severity: 'error' });
+      setAlert({ message: t('ErrorAcceptingDemande'), severity: 'error' });
     }
   };
 
@@ -191,10 +191,10 @@ const DemandeView = () => {
     try {
       await updateDemande(id, { status: STATUS.REJECTED });
       fetchDemandes();
-      setAlert({ message: 'Demande rejected successfully', severity: 'success' });
+      setAlert({ message: t('DemandeRejectedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error rejecting demande:', error);
-      setAlert({ message: 'Error rejecting demande', severity: 'error' });
+      setAlert({ message: t('ErrorRejectingDemande'), severity: 'error' });
     }
   };
 
@@ -211,10 +211,10 @@ const DemandeView = () => {
       setComment('');
       setFiles([]);
       fetchComments(selectedDemande?.id || 0);
-      setAlert({ message: 'Comment added successfully', severity: 'success' });
+      setAlert({ message: t('CommentAddedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error adding comment:', error);
-      setAlert({ message: 'Error adding comment', severity: 'error' });
+      setAlert({ message: t('ErrorAddingComment'), severity: 'error' });
     }
   };
 
@@ -230,7 +230,7 @@ const DemandeView = () => {
         await uploadDocuments('demande', selectedDemande.id, files);
         fetchDocuments(selectedDemande.id);
         setFiles([]);
-        setAlert({ message: 'Files uploaded successfully', severity: 'success' });
+        setAlert({ message: t('FilesUploadedSuccessfully'), severity: 'success' });
       }
     } catch (error) {
       setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
@@ -248,7 +248,7 @@ const DemandeView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading document:', error);
-      setAlert({ message: 'Error downloading document', severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocument'), severity: 'error' });
     }
   };
 
@@ -263,7 +263,7 @@ const DemandeView = () => {
       link.click();
     } catch (error) {
       console.error('Error downloading documents:', error);
-      setAlert({ message: t('ErrorUploadingFiles'), severity: 'error' });
+      setAlert({ message: t('ErrorDownloadingDocuments'), severity: 'error' });
     }
   };
 
@@ -273,10 +273,10 @@ const DemandeView = () => {
       if (selectedDemande) {
         fetchDocuments(selectedDemande.id);
       }
-      setAlert({ message: 'Document deleted successfully', severity: 'success' });
+      setAlert({ message: t('DocumentDeletedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error deleting document:', error);
-      setAlert({ message: 'Error deleting document', severity: 'error' });
+      setAlert({ message: t('ErrorDeletingDocument'), severity: 'error' });
     }
   };
 
@@ -608,6 +608,24 @@ const DemandeView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {alert && (
+        <Snackbar
+          open
+          autoHideDuration={6000}
+          onClose={() => setAlert(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ zIndex: 9999 }}
+        >
+          <Alert
+            variant="filled"
+            onClose={() => setAlert(null)}
+            severity={alert.severity}
+            sx={{ width: '100%', zIndex: 9999 }}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };

@@ -83,7 +83,7 @@ const UserView = () => {
         setTotalUsers(response.total);
       } catch (error) {
         console.error('Error fetching users:', error);
-        setAlert({ message: 'Error fetching users', severity: 'error' });
+        setAlert({ message: t('ErrorFetchingUsers'), severity: 'error' });
       }
     },
     [page, rowsPerPage],
@@ -118,10 +118,10 @@ const UserView = () => {
     try {
       await lockUser(id);
       fetchUsers();
-      setAlert({ message: 'User locked successfully', severity: 'success' });
+      setAlert({ message: t('UserLockedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error locking user:', error);
-      setAlert({ message: 'Error locking user', severity: 'error' });
+      setAlert({ message: t('ErrorLockingUser'), severity: 'error' });
     }
   };
 
@@ -129,10 +129,10 @@ const UserView = () => {
     try {
       await unlockUser(id);
       fetchUsers();
-      setAlert({ message: 'User unlocked successfully', severity: 'success' });
+      setAlert({ message: t('UserUnlockedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error unlocking user:', error);
-      setAlert({ message: 'Error unlocking user', severity: 'error' });
+      setAlert({ message: t('ErrorUnlockingUser'), severity: 'error' });
     }
   };
 
@@ -140,10 +140,10 @@ const UserView = () => {
     try {
       await updateUser(id, data);
       fetchUsers();
-      setAlert({ message: 'User updated successfully', severity: 'success' });
+      setAlert({ message: t('UserUpdatedSuccessfully'), severity: 'success' });
     } catch (error) {
       console.error('Error updating user:', error);
-      setAlert({ message: 'Error updating user', severity: 'error' });
+      setAlert({ message: t('ErrorUpdatingUser'), severity: 'error' });
     }
   };
 
@@ -318,6 +318,24 @@ const UserView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {alert && (
+        <Snackbar
+          open
+          autoHideDuration={6000}
+          onClose={() => setAlert(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ zIndex: 9999 }}
+        >
+          <Alert
+            variant="filled"
+            onClose={() => setAlert(null)}
+            severity={alert.severity}
+            sx={{ width: '100%', zIndex: 9999 }}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 };
