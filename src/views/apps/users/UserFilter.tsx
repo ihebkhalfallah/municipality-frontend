@@ -3,27 +3,21 @@ import { Box, TextField, Button, MenuItem, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'src/store/Store';
 import { AppState } from 'src/store/Store';
+import { USER_ROLE } from './UserView';
 
-export enum EVENT_TYPE {
-  EVENT = 'EVENT',
-  NEWS = 'NEWS',
-  ANNOUNCEMENT = 'ANNOUNCEMENT',
-}
-
-interface EventFilterProps {
+interface UserFilterProps {
   onFilter: (filters: any) => void;
 }
 
-const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
+const UserFilter: React.FC<UserFilterProps> = ({ onFilter }) => {
   const { t } = useTranslation();
   const customizer = useSelector((state: AppState) => state.customizer);
   const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
-
   const [filters, setFilters] = useState({
-    name: '',
-    status: '',
-    type: '',
-    createdByUserId: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    role: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,15 +29,19 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
   };
 
   const handleFilter = () => {
-    onFilter(filters);
+    const nonEmptyFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value),
+    );
+
+    onFilter(nonEmptyFilters);
   };
 
   const handleClear = () => {
     setFilters({
-      name: '',
-      status: '',
-      type: '',
-      createdByUserId: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: '',
     });
     onFilter({});
   };
@@ -52,39 +50,41 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
     <Box mb={3} dir={direction}>
       <Stack direction="row" spacing={2} alignItems="center">
         <TextField
-          label={t('Name')}
-          name="name"
-          value={filters.name}
+          label={t('First Name')}
+          name="firstName"
+          value={filters.firstName}
           onChange={handleChange}
           variant="outlined"
         />
         <TextField
-          label={t('Status')}
-          name="status"
-          value={filters.status}
+          label={t('Last Name')}
+          name="lastName"
+          value={filters.lastName}
           onChange={handleChange}
           variant="outlined"
-          select
-          sx={{ minWidth: 150 }}
-        >
-          <MenuItem value="">{t('All')}</MenuItem>
-          <MenuItem value="PENDING">{t('Pending')}</MenuItem>
-          <MenuItem value="ACCEPTED">{t('Accepted')}</MenuItem>
-          <MenuItem value="REJECTED">{t('Rejected')}</MenuItem>
-        </TextField>
+        />
         <TextField
-          label={t('Type')}
-          name="type"
-          value={filters.type}
+          label={t('Email')}
+          name="email"
+          value={filters.email}
+          onChange={handleChange}
+          variant="outlined"
+        />
+        <TextField
+          label={t('Role')}
+          name="role"
+          value={filters.role}
           onChange={handleChange}
           variant="outlined"
           select
           sx={{ minWidth: 150 }}
         >
           <MenuItem value="">{t('All')}</MenuItem>
-          <MenuItem value={EVENT_TYPE.EVENT}>{t('Event')}</MenuItem>
-          <MenuItem value={EVENT_TYPE.NEWS}>{t('News')}</MenuItem>
-          <MenuItem value={EVENT_TYPE.ANNOUNCEMENT}>{t('Announcement')}</MenuItem>
+          {Object.values(USER_ROLE).map((role) => (
+            <MenuItem key={role} value={role}>
+              {t(role)}
+            </MenuItem>
+          ))}
         </TextField>
         <Button variant="contained" color="primary" onClick={handleFilter}>
           {t('Filter')}
@@ -97,4 +97,4 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
   );
 };
 
-export default EventFilter;
+export default UserFilter;

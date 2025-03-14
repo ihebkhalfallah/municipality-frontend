@@ -47,6 +47,8 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EventFilter, { EVENT_TYPE } from './EventFilter';
 import { deleteEvent, getEvents, updateEvent } from 'src/services/eventService';
 import { STATUS } from 'src/types/apps/status';
+import { useSelector } from 'src/store/Store';
+import { AppState } from 'src/store/Store';
 
 // export enum EVENT_STATUS {
 //   PENDING = 'PENDING',
@@ -103,6 +105,8 @@ const EventView = () => {
     message: string;
     severity: 'success' | 'error' | 'info' | 'warning';
   } | null>(null);
+  const customizer = useSelector((state: AppState) => state.customizer);
+  const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
 
   const fetchEvents = useCallback(
     async (filters = {}) => {
@@ -296,13 +300,13 @@ const EventView = () => {
   };
 
   return (
-    <Box p={3}>
+    <Box p={3} dir={direction}>
       <Typography variant="h4" gutterBottom>
         {t('Events')}
       </Typography>
       <EventFilter onFilter={handleFilter} />
       <TableContainer component={Paper}>
-        <Table>
+        <Table dir={direction}>
           <TableHead>
             <TableRow>
               <TableCell
@@ -404,6 +408,25 @@ const EventView = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={t('rows per page')}
+          labelDisplayedRows={({ from, to, count }) => {
+            if (direction === 'rtl') {
+              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                'of',
+              )} ${to}-${from}`;
+            } else {
+              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
+            }
+          }}
+          dir={direction}
+          sx={{
+            '& .MuiTablePagination-actions': {
+              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
+            },
+            '& .MuiTablePagination-actions .MuiIconButton-root': {
+              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
+            },
+          }}
         />
       </TableContainer>
 

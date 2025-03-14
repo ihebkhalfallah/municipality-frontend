@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, MenuItem, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'src/store/Store';
+import { AppState } from 'src/store/Store';
 
 interface AuthorizationFilterProps {
   onFilter: (filters: any) => void;
@@ -8,6 +10,8 @@ interface AuthorizationFilterProps {
 
 const AuthorizationFilter: React.FC<AuthorizationFilterProps> = ({ onFilter }) => {
   const { t } = useTranslation();
+  const customizer = useSelector((state: AppState) => state.customizer);
+  const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
   const [filters, setFilters] = useState({
     name: '',
     status: '',
@@ -40,7 +44,7 @@ const AuthorizationFilter: React.FC<AuthorizationFilterProps> = ({ onFilter }) =
   };
 
   return (
-    <Box mb={3}>
+    <Box mb={3} dir={direction}>
       <Stack direction="row" spacing={2} alignItems="center">
         <TextField
           label={t('Name')}

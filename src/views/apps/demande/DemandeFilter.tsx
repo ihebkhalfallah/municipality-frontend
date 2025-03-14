@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, MenuItem, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'src/store/Store';
+import { AppState } from 'src/store/Store';
 
 export enum DEMANDE_TYPE {
   CONTESTATION = 'CONTESTATION',
@@ -14,6 +16,9 @@ interface DemandeFilterProps {
 
 const DemandeFilter: React.FC<DemandeFilterProps> = ({ onFilter }) => {
   const { t } = useTranslation();
+    const customizer = useSelector((state: AppState) => state.customizer);
+    const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
+  
   const [filters, setFilters] = useState({
     name: '',
     status: '',
@@ -44,7 +49,7 @@ const DemandeFilter: React.FC<DemandeFilterProps> = ({ onFilter }) => {
   };
 
   return (
-    <Box mb={3}>
+    <Box mb={3} dir={direction}>
       <Stack direction="row" spacing={2} alignItems="center">
         <TextField
           label={t('Name')}

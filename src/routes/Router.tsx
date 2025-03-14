@@ -5,6 +5,7 @@ import DemandeView from 'src/views/apps/demande/demande-view';
 import { getToken } from 'src/services/authService';
 import EventView from 'src/views/apps/event/event-view';
 import AuthorizationView from 'src/views/apps/authorization/AuthorizationView';
+import UsersView from 'src/views/apps/users/UserView';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -155,6 +156,15 @@ const Router = [
         element: (
           <PrivateRoute>
             <AuthorizationView />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/dashboards/users',
+        exact: true,
+        element: (
+          <PrivateRoute>
+            <UsersView />
           </PrivateRoute>
         ),
       },

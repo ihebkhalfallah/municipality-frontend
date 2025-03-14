@@ -81,5 +81,7 @@
     "Accept Authorization": "قبول التصريح",
     "Authorization Details": "تفاصيل التصريح",
     "sign in": "تسجيل الدخول",
-    "sign out": "تسجيل الخروج"
+    "sign out": "تسجيل الخروج",
+    "of": "من",
+    "rows per page": "عدد الصفوف لكل صفحة"
 }

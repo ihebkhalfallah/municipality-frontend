@@ -1,9 +1,5 @@
 import { uniqueId } from 'lodash';
-import {
-  IconFileText,
-  IconCalendarEvent,
-  IconShieldCheck,
-} from '@tabler/icons';
+import { IconFileText, IconCalendarEvent, IconShieldCheck } from '@tabler/icons';
 
 interface MenuitemsType {
   [x: string]: any;
@@ -19,9 +15,7 @@ interface MenuitemsType {
   variant?: string;
   external?: boolean;
 }
-import {
-  IconShoppingCart,
-} from '@tabler/icons';
+import { IconShoppingCart } from '@tabler/icons';
 
 const Menuitems: MenuitemsType[] = [
   {
@@ -46,7 +40,13 @@ const Menuitems: MenuitemsType[] = [
     icon: IconShieldCheck,
     href: '/dashboards/authorizations',
   },
-// {
+  {
+    id: uniqueId(),
+    title: 'Users',
+    icon: IconShieldCheck,
+    href: '/dashboards/users',
+  },
+  // {
   //   navlabel: true,
   //   subheader: 'Apps',
   // },

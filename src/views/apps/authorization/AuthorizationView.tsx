@@ -29,6 +29,7 @@ import {
   ListItemIcon,
   Alert,
   Snackbar,
+  createTheme,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { getComments, addComment } from 'src/services/commentService';
@@ -51,6 +52,8 @@ import {
 } from 'src/services/authorizationService';
 import AuthorizationFilter from './AuthorizationFilter';
 import { STATUS } from 'src/types/apps/status';
+import { useSelector } from 'src/store/Store';
+import { AppState } from 'src/store/Store';
 
 interface Authorization {
   id: number;
@@ -101,6 +104,8 @@ const AuthorizationView = () => {
     message: string;
     severity: 'success' | 'error' | 'info' | 'warning';
   } | null>(null);
+  const customizer = useSelector((state: AppState) => state.customizer);
+  const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
 
   const fetchAuthorizations = useCallback(
     async (filters = {}) => {
@@ -292,14 +297,17 @@ const AuthorizationView = () => {
     return statusMap[status] || status;
   };
 
+  const theme = createTheme({
+    direction: customizer.isLanguage === 'ar' ? 'rtl' : 'ltr',
+  });
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom dir={direction}>
         {t('Authorizations')}
       </Typography>
       <AuthorizationFilter onFilter={handleFilter} />
       <TableContainer component={Paper}>
-        <Table>
+        <Table dir={direction}>
           <TableHead>
             <TableRow>
               <TableCell
@@ -401,6 +409,27 @@ const AuthorizationView = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={t('rows per page')}
+          labelDisplayedRows={({ from, to, count }) => {
+            if (direction === 'rtl') {
+              // For RTL languages (e.g., Arabic), reverse the `from` and `to` values
+              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                'of',
+              )} ${to}-${from}`;
+            } else {
+              // For LTR languages, use the default format "1-5 of 9"
+              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
+            }
+          }}
+          dir={direction}
+          sx={{
+            '& .MuiTablePagination-actions': {
+              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row', // Reverse the order of buttons for RTL
+            },
+            '& .MuiTablePagination-actions .MuiIconButton-root': {
+              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none', // Flip the icons horizontally for RTL
+            },
+          }}
         />
       </TableContainer>
 

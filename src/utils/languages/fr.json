@@ -81,5 +81,7 @@
     "Accept Authorization": "Accepter l'autorisation",
     "Authorization Details": "Détails de l'autorisation",
     "sign in": "se connecter",
-    "sign out": "déconnexion"
+    "sign out": "déconnexion",
+    "of": "de",
+    "rows per page": "lignes par page"
 }
