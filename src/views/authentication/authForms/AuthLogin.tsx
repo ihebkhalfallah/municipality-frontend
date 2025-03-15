@@ -7,6 +7,7 @@ import {
   Button,
   Stack,
   Divider,
+  Alert,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from 'src/services/authService';
@@ -22,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { t } = useTranslation();
   const handleLogin = async () => {
@@ -30,6 +32,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       navigate('/');
     } catch (error) {
       console.error('Login failed:', error);
+      setError('فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى.');
     }
   };
 
@@ -58,6 +61,8 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           </Typography>
         </Divider>
       </Box>
+
+      {error && <Alert severity="error">{error}</Alert>}
 
       <Stack>
         <Box>

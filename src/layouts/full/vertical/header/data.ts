@@ -120,20 +120,20 @@ interface ProfileType {
 const profile: ProfileType[] = [
   {
     href: '/user-profile',
-    title: 'My Profile',
-    subtitle: 'Account Settings',
+    title: 'My Profile', // Use translation key
+    subtitle: 'Account Settings', // Use translation key
     icon: icon1,
   },
   // {
   //   href: '/apps/email',
-  //   title: 'My Inbox',
-  //   subtitle: 'Messages & Emails',
+  //   title: 'My Inbox', // Use translation key
+  //   subtitle: 'Messages & Emails', // Use translation key
   //   icon: icon2,
   // },
   // {
   //   href: '/apps/notes',
-  //   title: 'My Tasks',
-  //   subtitle: 'To-do and Daily Tasks',
+  //   title: 'My Tasks', // Use translation key
+  //   subtitle: 'To-do and Daily Tasks', // Use translation key
   //   icon: icon3,
   // },
 ];

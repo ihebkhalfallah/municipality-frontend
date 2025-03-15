@@ -2,10 +2,10 @@ import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import DemandeView from 'src/views/apps/demande/demande-view';
-import { getToken } from 'src/services/authService';
+import { getToken, getUserRole } from 'src/services/authService';
 import EventView from 'src/views/apps/event/event-view';
 import AuthorizationView from 'src/views/apps/authorization/AuthorizationView';
-import UsersView from 'src/views/apps/users/UserView';
+import UsersView, { USER_ROLE } from 'src/views/apps/users/UserView';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -111,10 +111,33 @@ const Maintenance = Loadable(lazy(() => import('../views/authentication/Maintena
 // landingpage
 const Landingpage = Loadable(lazy(() => import('../views/pages/landingpage/Landingpage')));
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+const PrivateRoute = ({
+  children,
+  allowedRoles,
+}: {
+  children: JSX.Element;
+  allowedRoles: string[];
+}) => {
   const token = getToken();
+  const userRole = getUserRole();
 
-  return token ? children : <Navigate to="/auth/login" />;
+  if (!token) {
+    return <Navigate to="/auth/login" />;
+  }
+
+  if (!allowedRoles.includes(userRole)) {
+    console.log('userRole', userRole);
+    if (userRole === USER_ROLE.PERMISSION_ADMIN) {
+      return <Navigate to="/dashboards/events" />;
+    } else if (userRole === USER_ROLE.CONTESTATION_ADMIN) {
+      return <Navigate to="/dashboards/demandes" />;
+    } else if (userRole === USER_ROLE.DEMANDE_ADMIN) {
+      return <Navigate to="/dashboards/authorizations" />;
+    }
+    return <Navigate to="/dashboards/demandes" />;
+  }
+
+  return children;
 };
 
 const Router = [
@@ -136,7 +159,7 @@ const Router = [
         path: '/dashboards/demandes',
         exact: true,
         element: (
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={['SUPER_ADMIN', 'CONTESTATION_ADMIN']}>
             <DemandeView />
           </PrivateRoute>
         ),
@@ -145,7 +168,7 @@ const Router = [
         path: '/dashboards/events',
         exact: true,
         element: (
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={['SUPER_ADMIN', 'PERMISSION_ADMIN']}>
             <EventView />
           </PrivateRoute>
         ),
@@ -154,7 +177,7 @@ const Router = [
         path: '/dashboards/authorizations',
         exact: true,
         element: (
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={['SUPER_ADMIN', 'DEMANDE_ADMIN']}>
             <AuthorizationView />
           </PrivateRoute>
         ),
@@ -163,7 +186,7 @@ const Router = [
         path: '/dashboards/users',
         exact: true,
         element: (
-          <PrivateRoute>
+          <PrivateRoute allowedRoles={['SUPER_ADMIN']}>
             <UsersView />
           </PrivateRoute>
         ),
@@ -171,7 +194,14 @@ const Router = [
       {
         path: '/apps/notes',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Notes />
           </PrivateRoute>
         ),
@@ -179,7 +209,14 @@ const Router = [
       {
         path: '/apps/ecommerce/shop',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Ecommerce />
           </PrivateRoute>
         ),
@@ -187,7 +224,14 @@ const Router = [
       {
         path: '/apps/ecommerce/eco-product-list',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <EcomProductList />
           </PrivateRoute>
         ),
@@ -195,7 +239,14 @@ const Router = [
       {
         path: '/apps/ecommerce/eco-checkout',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <EcomProductCheckout />
           </PrivateRoute>
         ),
@@ -203,7 +254,14 @@ const Router = [
       {
         path: '/apps/ecommerce/detail/:id',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <EcommerceDetail />
           </PrivateRoute>
         ),
@@ -211,7 +269,14 @@ const Router = [
       {
         path: '/apps/followers',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Followers />
           </PrivateRoute>
         ),
@@ -219,7 +284,14 @@ const Router = [
       {
         path: '/apps/friends',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Friends />
           </PrivateRoute>
         ),
@@ -227,7 +299,14 @@ const Router = [
       {
         path: '/apps/gallery',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Gallery />
           </PrivateRoute>
         ),
@@ -235,7 +314,14 @@ const Router = [
       {
         path: '/user-profile',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <UserProfile />
           </PrivateRoute>
         ),
@@ -243,7 +329,14 @@ const Router = [
       {
         path: '/apps/calendar',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Calendar />
           </PrivateRoute>
         ),
@@ -251,7 +344,14 @@ const Router = [
       {
         path: '/ui-components/alert',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiAlert />
           </PrivateRoute>
         ),
@@ -259,7 +359,14 @@ const Router = [
       {
         path: '/ui-components/accordion',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiAccordion />
           </PrivateRoute>
         ),
@@ -267,7 +374,14 @@ const Router = [
       {
         path: '/ui-components/avatar',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiAvatar />
           </PrivateRoute>
         ),
@@ -275,7 +389,14 @@ const Router = [
       {
         path: '/ui-components/chip',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiChip />
           </PrivateRoute>
         ),
@@ -283,7 +404,14 @@ const Router = [
       {
         path: '/ui-components/dialog',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiDialog />
           </PrivateRoute>
         ),
@@ -291,7 +419,14 @@ const Router = [
       {
         path: '/ui-components/list',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiList />
           </PrivateRoute>
         ),
@@ -299,7 +434,14 @@ const Router = [
       {
         path: '/ui-components/popover',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiPopover />
           </PrivateRoute>
         ),
@@ -307,7 +449,14 @@ const Router = [
       {
         path: '/ui-components/rating',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiRating />
           </PrivateRoute>
         ),
@@ -315,7 +464,14 @@ const Router = [
       {
         path: '/ui-components/tabs',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiTabs />
           </PrivateRoute>
         ),
@@ -323,7 +479,14 @@ const Router = [
       {
         path: '/ui-components/tooltip',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiTooltip />
           </PrivateRoute>
         ),
@@ -331,7 +494,14 @@ const Router = [
       {
         path: '/ui-components/transfer-list',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiTransferList />
           </PrivateRoute>
         ),
@@ -339,7 +509,14 @@ const Router = [
       {
         path: '/ui-components/typography',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiTypography />
           </PrivateRoute>
         ),
@@ -347,7 +524,14 @@ const Router = [
       {
         path: '/pages/casl',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <RollbaseCASL />
           </PrivateRoute>
         ),
@@ -355,7 +539,14 @@ const Router = [
       {
         path: '/pages/treeview',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Treeview />
           </PrivateRoute>
         ),
@@ -363,7 +554,14 @@ const Router = [
       {
         path: '/pages/pricing',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Pricing />
           </PrivateRoute>
         ),
@@ -371,7 +569,14 @@ const Router = [
       {
         path: '/pages/faq',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <Faq />
           </PrivateRoute>
         ),
@@ -379,7 +584,14 @@ const Router = [
       {
         path: '/pages/account-settings',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <AccountSetting />
           </PrivateRoute>
         ),
@@ -387,7 +599,14 @@ const Router = [
       {
         path: '/tables/basic',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <BasicTable />
           </PrivateRoute>
         ),
@@ -395,7 +614,14 @@ const Router = [
       {
         path: '/tables/enhanced',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <EnhanceTable />
           </PrivateRoute>
         ),
@@ -403,7 +629,14 @@ const Router = [
       {
         path: '/tables/pagination',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <PaginationTable />
           </PrivateRoute>
         ),
@@ -411,7 +644,14 @@ const Router = [
       {
         path: '/tables/fixed-header',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FixedHeaderTable />
           </PrivateRoute>
         ),
@@ -419,7 +659,14 @@ const Router = [
       {
         path: '/tables/collapsible',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <CollapsibleTable />
           </PrivateRoute>
         ),
@@ -427,7 +674,14 @@ const Router = [
       {
         path: '/tables/search',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <SearchTable />
           </PrivateRoute>
         ),
@@ -435,7 +689,14 @@ const Router = [
       {
         path: '/forms/form-elements/autocomplete',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiAutoComplete />
           </PrivateRoute>
         ),
@@ -443,7 +704,14 @@ const Router = [
       {
         path: '/forms/form-elements/button',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiButton />
           </PrivateRoute>
         ),
@@ -451,7 +719,14 @@ const Router = [
       {
         path: '/forms/form-elements/checkbox',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiCheckbox />
           </PrivateRoute>
         ),
@@ -459,7 +734,14 @@ const Router = [
       {
         path: '/forms/form-elements/radio',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiRadio />
           </PrivateRoute>
         ),
@@ -467,7 +749,14 @@ const Router = [
       {
         path: '/forms/form-elements/slider',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiSlider />
           </PrivateRoute>
         ),
@@ -475,7 +764,14 @@ const Router = [
       {
         path: '/forms/form-elements/date-time',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiDateTime />
           </PrivateRoute>
         ),
@@ -483,7 +779,14 @@ const Router = [
       {
         path: '/forms/form-elements/switch',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiSwitch />
           </PrivateRoute>
         ),
@@ -491,7 +794,14 @@ const Router = [
       {
         path: '/forms/form-elements/switch',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <MuiSwitch />
           </PrivateRoute>
         ),
@@ -499,7 +809,14 @@ const Router = [
       {
         path: '/forms/form-layouts',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormLayouts />
           </PrivateRoute>
         ),
@@ -507,7 +824,14 @@ const Router = [
       {
         path: '/forms/form-custom',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormCustom />
           </PrivateRoute>
         ),
@@ -515,7 +839,14 @@ const Router = [
       {
         path: '/forms/form-wizard',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormWizard />
           </PrivateRoute>
         ),
@@ -523,7 +854,14 @@ const Router = [
       {
         path: '/forms/form-validation',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormValidation />
           </PrivateRoute>
         ),
@@ -531,7 +869,14 @@ const Router = [
       {
         path: '/forms/form-horizontal',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormHorizontal />
           </PrivateRoute>
         ),
@@ -539,7 +884,14 @@ const Router = [
       {
         path: '/forms/form-vertical',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <FormVertical />
           </PrivateRoute>
         ),
@@ -547,7 +899,14 @@ const Router = [
       {
         path: '/forms/quill-editor',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <QuillEditor />
           </PrivateRoute>
         ),
@@ -555,7 +914,14 @@ const Router = [
       {
         path: '/charts/area-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <AreaChart />
           </PrivateRoute>
         ),
@@ -563,7 +929,14 @@ const Router = [
       {
         path: '/charts/line-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <LineChart />
           </PrivateRoute>
         ),
@@ -571,7 +944,14 @@ const Router = [
       {
         path: '/charts/gredient-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <GredientChart />
           </PrivateRoute>
         ),
@@ -579,7 +959,14 @@ const Router = [
       {
         path: '/charts/candlestick-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <CandlestickChart />
           </PrivateRoute>
         ),
@@ -587,7 +974,14 @@ const Router = [
       {
         path: '/charts/column-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <ColumnChart />
           </PrivateRoute>
         ),
@@ -595,7 +989,14 @@ const Router = [
       {
         path: '/charts/doughnut-pie-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <DoughnutChart />
           </PrivateRoute>
         ),
@@ -603,7 +1004,14 @@ const Router = [
       {
         path: '/charts/radialbar-chart',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <RadialbarChart />
           </PrivateRoute>
         ),
@@ -611,7 +1019,14 @@ const Router = [
       {
         path: '/widgets/cards',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <WidgetCards />
           </PrivateRoute>
         ),
@@ -619,7 +1034,14 @@ const Router = [
       {
         path: '/widgets/banners',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <WidgetBanners />
           </PrivateRoute>
         ),
@@ -627,7 +1049,14 @@ const Router = [
       {
         path: '/widgets/charts',
         element: (
-          <PrivateRoute>
+          <PrivateRoute
+            allowedRoles={[
+              'SUPER_ADMIN',
+              'PERMISSION_ADMIN',
+              'CONTESTATION_ADMIN',
+              'DEMANDE_ADMIN',
+            ]}
+          >
             <WidgetCharts />
           </PrivateRoute>
         ),

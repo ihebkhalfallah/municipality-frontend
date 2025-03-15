@@ -8,6 +8,7 @@ import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 import NavGroup from './NavGroup/NavGroup';
 import { AppState } from 'src/store/Store';
+import { getUserRole } from 'src/services/authService';
 
 const SidebarItems = () => {
   const { pathname } = useLocation();
@@ -17,11 +18,19 @@ const SidebarItems = () => {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
   const hideMenu: any = lgUp ? customizer.isCollapse && !customizer.isSidebarHover : '';
   const dispatch = useDispatch();
+  const userRole = getUserRole();
+
+  const filteredMenuItems = Menuitems.filter((item) => {
+    if (item.allowedRoles) {
+      return item.allowedRoles.includes(userRole);
+    }
+    return true;
+  });
 
   return (
     <Box sx={{ px: 3, zIndex: 1200 }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
-        {Menuitems.map((item) => {
+        {filteredMenuItems.map((item) => {
           // {/********SubHeader**********/}
           if (item.subheader) {
             return <NavGroup item={item} hideMenu={hideMenu} key={item.subheader} />;

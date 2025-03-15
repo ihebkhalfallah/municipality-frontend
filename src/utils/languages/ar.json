@@ -121,5 +121,22 @@
     "DemandeAcceptedSuccessfully": "تم قبول الطلب بنجاح",
     "ErrorAcceptingDemande": "خطأ في قبول الطلب",
     "DemandeRejectedSuccessfully": "تم رفض الطلب بنجاح",
-    "ErrorRejectingDemande": "خطأ في رفض الطلب"
+    "ErrorRejectingDemande": "خطأ في رفض الطلب",
+    "User Profile": "الملف الشخصي",
+    "this is User Profile page": "هذه هي صفحة الملف الشخصي",
+    "First Name": "الاسم الأول",
+    "Last Name": "اسم العائلة",
+    "Email": "البريد الإلكتروني",
+    "Birth Date": "تاريخ الميلاد",
+    "Phone Number": "رقم الهاتف",
+    "Association ID": "معرف الجمعية",
+    "Job": "الوظيفة",
+    "CIN": "رقم الهوية",
+    "Cancel": "إلغاء",
+    "Edit": "تعديل",
+    "Save": "حفظ",
+    "Logout": "تسجيل الخروج",
+    "My Profile": "ملفي الشخصي",
+    "Account Settings": "إعدادات الحساب",
+    "Login failed. Please check your credentials and try again.": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى."
 }

@@ -12,7 +12,6 @@ const App: FC = () => {
   const routing = useRoutes(Router);
   const theme = ThemeSettings();
   const customizer = useSelector((state: AppState) => state.customizer);
-  console.log('Port:', process.env.REACT_APP_PORT);
   return (
     <ThemeProvider theme={theme}>
       <RTL direction={customizer.activeDir}>
