@@ -21,14 +21,27 @@ interface User {
 }
 
 export const login = async (email: string, password: string) => {
-  const response = await axios.post(API_URL, { email, password });
-  const { accessToken, user } = response.data;
-  Cookies.set('token', accessToken);
+  try {
+    const response = await axios.post(API_URL, { email, password });
+    const { accessToken, user } = response.data;
 
-  const fullUserInfo = await getUserById(user.id);
-  Cookies.set('user', JSON.stringify(fullUserInfo));
+    if (user.locked) {
+      throw new Error('Your account is locked.');
+    }
 
-  return { ...response.data, user: fullUserInfo };
+    Cookies.set('token', accessToken);
+
+    const fullUserInfo = await getUserById(user.id);
+    Cookies.set('user', JSON.stringify(fullUserInfo));
+
+    return { ...response.data, user: fullUserInfo };
+  } catch (error: any) {
+    console.log(error);
+    if (error.response && error.response.data.message === 'Your account is locked.') {
+      throw new Error('Your account is locked.');
+    }
+    throw new Error('Login failed. Please check your credentials and try again.');
+  }
 };
 
 export const getToken = () => {

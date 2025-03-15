@@ -30,9 +30,13 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     try {
       await login(email, password);
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login failed:', error);
-      setError('فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى.');
+      if (error.message === 'Your account is locked.') {
+        setError('المستخدم محظور ولا يمكنه الاتصال.');
+      } else {
+        setError('فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى.');
+      }
     }
   };
 
