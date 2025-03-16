@@ -121,12 +121,11 @@ const PrivateRoute = ({
   const token = getToken();
   const userRole = getUserRole();
 
-  if (!token) {
+  if (!token || !userRole) {
     return <Navigate to="/auth/login" />;
   }
 
   if (!allowedRoles.includes(userRole)) {
-    console.log('userRole', userRole);
     if (userRole === USER_ROLE.PERMISSION_ADMIN) {
       return <Navigate to="/dashboards/events" />;
     } else if (userRole === USER_ROLE.CONTESTATION_ADMIN) {

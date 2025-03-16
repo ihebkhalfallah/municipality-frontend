@@ -22,7 +22,7 @@ const SidebarItems = () => {
 
   const filteredMenuItems = Menuitems.filter((item) => {
     if (item.allowedRoles) {
-      return item.allowedRoles.includes(userRole);
+      return userRole ? item.allowedRoles.includes(userRole) : false;
     }
     return true;
   });

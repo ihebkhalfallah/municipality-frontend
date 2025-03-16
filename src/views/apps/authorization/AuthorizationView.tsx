@@ -118,28 +118,34 @@ const AuthorizationView = () => {
         setAlert({ message: t('ErrorFetchingAuthorizations'), severity: 'error' });
       }
     },
-    [page, rowsPerPage],
+    [page, rowsPerPage, t],
   );
 
-  const fetchComments = useCallback(async (authorizationId: number) => {
-    try {
-      const response = await getComments({ authorizationId });
-      setComments(response.data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
-    }
-  }, []);
+  const fetchComments = useCallback(
+    async (authorizationId: number) => {
+      try {
+        const response = await getComments({ authorizationId });
+        setComments(response.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
+      }
+    },
+    [t],
+  );
 
-  const fetchDocuments = useCallback(async (authorizationId: number) => {
-    try {
-      const response = await getDocumentsByEntity('authorization', authorizationId);
-      setDocuments(response);
-    } catch (error) {
-      console.error('Error fetching documents:', error);
-      setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
-    }
-  }, []);
+  const fetchDocuments = useCallback(
+    async (authorizationId: number) => {
+      try {
+        const response = await getDocumentsByEntity('authorization', authorizationId);
+        setDocuments(response);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
+      }
+    },
+    [t],
+  );
 
   useEffect(() => {
     fetchAuthorizations();

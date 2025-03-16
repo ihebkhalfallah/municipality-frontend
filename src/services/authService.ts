@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { getUserById } from './userService';
 
-const API_URL = 'http://localhost:3000/auth/login';
+const API_URL = process.env.REACT_APP_API_URL + '/auth/login';
 
 interface User {
   id: number;
@@ -36,7 +36,6 @@ export const login = async (email: string, password: string) => {
 
     return { ...response.data, user: fullUserInfo };
   } catch (error: any) {
-    console.log(error);
     if (error.response && error.response.data.message === 'Your account is locked.') {
       throw new Error('Your account is locked.');
     }
@@ -56,12 +55,15 @@ export const removeToken = () => {
 export const getCurrentUser = () => {
   const user = Cookies.get('user');
   if (!user) {
-    throw new Error('No user is currently logged in.');
+    return null;
   }
   return JSON.parse(user) as User;
 };
 
 export const getUserRole = () => {
   const user = getCurrentUser();
+  if (!user) {
+    return null;
+  }
   return user.role;
 };

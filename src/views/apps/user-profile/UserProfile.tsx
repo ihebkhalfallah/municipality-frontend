@@ -44,19 +44,24 @@ const UserProfile = () => {
     const fetchUser = async () => {
       try {
         const currentUser = await getCurrentUser();
-        setUser(currentUser);
-        setFormData({
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
-          email: currentUser.email,
-          birthDate: currentUser.birthDate,
-          phoneNumber: currentUser.phoneNumber,
-          job: currentUser.job,
-        });
+        if (currentUser) {
+          setUser(currentUser);
+          setFormData({
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            email: currentUser.email,
+            birthDate: currentUser.birthDate,
+            phoneNumber: currentUser.phoneNumber,
+            job: currentUser.job,
+          });
+        } else {
+          console.error('No user is currently logged in.');
+        }
       } catch (error) {
         console.error('Failed to fetch user:', error);
       }
     };
+
     fetchUser();
   }, []);
 

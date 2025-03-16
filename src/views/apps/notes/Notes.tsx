@@ -27,7 +27,7 @@ const Notes = () => {
     } else {
       setMobileSidebarOpen(true);
     }
-  }, [lgDown]);
+  }, [lgDown, isMobileSidebarOpen]);
 
   return (
     <PageContainer title="Notes ui" description="this is Note page">

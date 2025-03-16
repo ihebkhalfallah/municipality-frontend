@@ -119,28 +119,34 @@ const EventView = () => {
         setAlert({ message: t('ErrorFetchingEvents'), severity: 'error' });
       }
     },
-    [page, rowsPerPage],
+    [page, rowsPerPage, t],
   );
 
-  const fetchComments = useCallback(async (eventId: number) => {
-    try {
-      const response = await getComments({ eventId });
-      setComments(response.data);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
-    }
-  }, []);
+  const fetchComments = useCallback(
+    async (eventId: number) => {
+      try {
+        const response = await getComments({ eventId });
+        setComments(response.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        setAlert({ message: t('ErrorFetchingComments'), severity: 'error' });
+      }
+    },
+    [t],
+  );
 
-  const fetchDocuments = useCallback(async (eventId: number) => {
-    try {
-      const response = await getDocumentsByEntity('event', eventId);
-      setDocuments(response);
-    } catch (error) {
-      console.error('Error fetching documents:', error);
-      setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
-    }
-  }, []);
+  const fetchDocuments = useCallback(
+    async (eventId: number) => {
+      try {
+        const response = await getDocumentsByEntity('event', eventId);
+        setDocuments(response);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        setAlert({ message: t('ErrorFetchingDocuments'), severity: 'error' });
+      }
+    },
+    [t],
+  );
 
   useEffect(() => {
     fetchEvents();

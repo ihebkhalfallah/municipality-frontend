@@ -86,7 +86,7 @@ const UserView = () => {
         setAlert({ message: t('ErrorFetchingUsers'), severity: 'error' });
       }
     },
-    [page, rowsPerPage],
+    [page, rowsPerPage, t],
   );
 
   useEffect(() => {

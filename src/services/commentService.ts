@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './authService';
 
-const API_URL = 'http://localhost:3000/comments';
+const API_URL = process.env.REACT_APP_API_URL + '/comments';
 
 const getAuthHeaders = () => {
   const token = getToken();
@@ -22,7 +22,7 @@ export const addComment = async (entityType: string, entityId: number, commentTe
   const response = await axios.post(
     API_URL,
     { [`${entityType}Id`]: entityId, commentText },
-    getAuthHeaders()
+    getAuthHeaders(),
   );
   return response.data;
 };

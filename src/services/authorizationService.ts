@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getToken } from './authService';
 
-const API_URL = 'http://localhost:3000/authorizations';
+const API_URL = process.env.REACT_APP_API_URL + '/authorizations';
 
 const getAuthHeaders = () => {
   const token = getToken();
