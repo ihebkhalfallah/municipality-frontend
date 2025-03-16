@@ -5,7 +5,6 @@ import PageContainer from 'src/components/container/PageContainer';
 import WeeklyStats from 'src/components/dashboards/modern/WeeklyStats';
 import YearlySales from 'src/components/dashboards/ecommerce/YearlySales';
 import PaymentGateways from 'src/components/dashboards/ecommerce/PaymentGateways';
-import WelcomeCard from 'src/components/dashboards/ecommerce/WelcomeCard';
 import Payment from 'src/components/dashboards/ecommerce/Payment';
 import SalesProfit from 'src/components/dashboards/ecommerce/SalesProfit';
 import RevenueUpdates from 'src/components/dashboards/ecommerce/RevenueUpdates';
@@ -21,10 +20,6 @@ const Ecommerce = () => {
     <PageContainer title="eCommerce Dashboard" description="this is eCommerce Dashboard page">
       <Box mt={3}>
         <Grid container spacing={3}>
-          {/* column */}
-          <Grid item xs={12} lg={8}>
-            <WelcomeCard />
-          </Grid>
 
           {/* column */}
           <Grid item xs={12} lg={4}>

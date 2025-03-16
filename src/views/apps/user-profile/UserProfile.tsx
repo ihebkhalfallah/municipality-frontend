@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button, TextField, Box, Alert, Snackbar } from '@mui/material';
+import {
+  Grid,
+  Button,
+  TextField,
+  Box,
+  Alert,
+  Snackbar,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 import { getCurrentUser } from 'src/services/authService';
 import { updateUser } from 'src/services/userService';
@@ -9,6 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface User {
   id: number;
@@ -24,21 +34,41 @@ interface User {
   profile_photo: string;
   locked: boolean;
   createdAt: string;
+  password?: string; // Add optional password property
+  previousPassword?: string; // Add optional previousPassword property
+}
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  birthDate: string;
+  phoneNumber: string;
+  job: string;
+  password: string;
+  previousPassword: string;
 }
 
 const UserProfile = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
     birthDate: '',
     phoneNumber: '',
     job: '',
+    password: '',
+    previousPassword: '',
   });
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPreviousPassword, setShowPreviousPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPreviousPassword = () => setShowPreviousPassword(!showPreviousPassword);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -53,6 +83,8 @@ const UserProfile = () => {
             birthDate: currentUser.birthDate,
             phoneNumber: currentUser.phoneNumber,
             job: currentUser.job,
+            password: '',
+            previousPassword: '',
           });
         } else {
           console.error('No user is currently logged in.');
@@ -84,7 +116,7 @@ const UserProfile = () => {
         };
 
         const updatedData = Object.keys(formattedData).reduce((acc: Partial<User>, key) => {
-          const typedKey = key as keyof typeof formattedData;
+          const typedKey = key as keyof FormData;
           if (formattedData[typedKey] !== user[typedKey]) {
             if (formattedData[typedKey] !== null) {
               acc[typedKey] = formattedData[typedKey] as string;
@@ -93,14 +125,18 @@ const UserProfile = () => {
           return acc;
         }, {} as Partial<User>);
 
+        if (formData.password && formData.previousPassword) {
+          (updatedData as any).password = formData.password;
+          (updatedData as any).previousPassword = formData.previousPassword;
+        }
+
         const updatedUser = await updateUser(user.id, updatedData);
         setUser(updatedUser);
         Cookies.set('user', JSON.stringify(updatedUser));
         setEditMode(false);
-        setAlert({ type: 'success', message: 'User updated successfully' });
-      } catch (error) {
-        console.error('Failed to update user:', error);
-        setAlert({ type: 'error', message: 'Error updating user' });
+        setAlert({ type: 'success', message: t('UserUpdatedSuccessfully') });
+      } catch (error: any) {
+        setAlert({ type: 'error', message: t(`${error.response.data.message}`) });
       }
     }
   };
@@ -132,7 +168,7 @@ const UserProfile = () => {
                 <Alert
                   variant="filled"
                   onClose={() => setAlert(null)}
-                  // severity={alert.severity}
+                  severity={alert.type}
                   sx={{ width: '100%', zIndex: 9999 }}
                 >
                   {alert.message}
@@ -212,6 +248,52 @@ const UserProfile = () => {
                 disabled
               />
             )}
+            <TextField
+              label={t('Password')}
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              value={formData.password}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              disabled={!editMode}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label={t('Previous Password')}
+              name="previousPassword"
+              type={showPreviousPassword ? 'text' : 'password'}
+              value={formData.previousPassword}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              disabled={!editMode}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle previous password visibility"
+                      onClick={handleClickShowPreviousPassword}
+                      edge="end"
+                    >
+                      {showPreviousPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
             {editMode && (
               <Button variant="contained" color="primary" onClick={handleSave}>
                 {t('Save')}

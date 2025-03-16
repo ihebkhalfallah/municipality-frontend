@@ -138,5 +138,13 @@
     "Logout": "تسجيل الخروج",
     "My Profile": "ملفي الشخصي",
     "Account Settings": "إعدادات الحساب",
-    "Login failed. Please check your credentials and try again.": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى."
+    "Login failed. Please check your credentials and try again.": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك, حاول مرة أخرى.",
+    "User not found.": "المستخدم غير موجود.",
+    "Old password is required to update the password.": "كلمة المرور القديمة مطلوبة لتحديث كلمة المرور.",
+    "Old password is incorrect.": "كلمة المرور القديمة غير صحيحة.",
+    "You have used this password before. Please choose a different password.": "لقد استخدمت هذه الكلمة من قبل. يرجى اختيار كلمة مرور مختلفة.",
+    "Only SUPER_ADMIN can create admins": "فقط SUPER_ADMIN يمكنه إنشاء المسؤولين",
+    "Only a SUPER_ADMIN can create another SUPER_ADMIN": "فقط SUPER_ADMIN يمكنه إنشاء SUPER_ADMIN آخر",
+    "Email already in use": "البريد الإلكتروني مستخدم بالفعل",
+    "Create User": "إنشاء مستخدم"
 }

@@ -366,12 +366,16 @@ const AuthorizationView = () => {
                 key={authorization.id}
                 style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
               >
-                <TableCell>{authorization.name}</TableCell>
-                <TableCell>{authorization.description}</TableCell>
-                <TableCell>{authorization.location}</TableCell>
-                <TableCell>{new Date(authorization.start_date).toLocaleString()}</TableCell>
-                <TableCell>{new Date(authorization.end_date).toLocaleString()}</TableCell>
-                <TableCell>
+                <TableCell align="center">{authorization.name}</TableCell>
+                <TableCell align="center">{authorization.description}</TableCell>
+                <TableCell align="center">{authorization.location}</TableCell>
+                <TableCell align="center">
+                  {new Date(authorization.start_date).toLocaleString()}
+                </TableCell>
+                <TableCell align="center">
+                  {new Date(authorization.end_date).toLocaleString()}
+                </TableCell>
+                <TableCell align="center">
                   <Chip
                     label={getTranslatedStatus(authorization.status)}
                     color={
@@ -384,7 +388,7 @@ const AuthorizationView = () => {
                     sx={{ minWidth: 100 }}
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <Stack direction="row" spacing={1}>
                     <Tooltip title={t('View Authorization')}>
                       <IconButton onClick={() => handleViewAuthorization(authorization)}>

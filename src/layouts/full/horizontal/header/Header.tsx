@@ -13,7 +13,6 @@ import {
 import { useSelector, useDispatch } from 'src/store/Store';
 import { toggleMobileSidebar } from 'src/store/customizer/CustomizerSlice';
 import { IconMenu2 } from '@tabler/icons';
-import Notifications from 'src/layouts/full/vertical/header/Notification';
 import Cart from 'src/layouts/full/vertical/header/Cart';
 import Profile from 'src/layouts/full/vertical/header/Profile';
 import Search from 'src/layouts/full/vertical/header/Search';
@@ -88,7 +87,6 @@ const Header = () => {
           {/* ------------------------------------------- */}
           {/* End Ecommerce Dropdown */}
           {/* ------------------------------------------- */}
-          <Notifications />
           <Profile />
         </Stack>
       </ToolbarStyled>

@@ -142,5 +142,13 @@
     "Logout": "Se déconnecter",
     "My Profile": "Mon profil",
     "Account Settings": "Paramètres du compte",
-    "Login failed. Please check your credentials and try again.": "Échec de la connexion. Veuillez vérifier vos informations d'identification et réessayer."
+    "Login failed. Please check your credentials and try again.": "Échec de la connexion. Veuillez vérifier vos informations d'identification et réessayer.",
+    "User not found.": "Utilisateur non trouvé.",
+    "Old password is required to update the password.": "L'ancien mot de passe est requis pour mettre à jour le mot de passe.",
+    "Old password is incorrect.": "L'ancien mot de passe est incorrect.",
+    "You have used this password before. Please choose a different password.": "Vous avez déjà utilisé ce mot de passe. Veuillez choisir un mot de passe différent.",
+    "Only SUPER_ADMIN can create admins": "Seul le SUPER_ADMIN peut créer des administrateurs",
+    "Only a SUPER_ADMIN can create another SUPER_ADMIN": "Seul un SUPER_ADMIN peut créer un autre SUPER_ADMIN",
+    "Email already in use": "Email déjà utilisé",
+    "Create User": "Créer un utilisateur"
 }

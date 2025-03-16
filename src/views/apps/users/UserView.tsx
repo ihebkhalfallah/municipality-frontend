@@ -1,4 +1,3 @@
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -17,7 +16,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
   IconButton,
   Typography,
   Box,
@@ -28,13 +26,23 @@ import {
   Divider,
   Alert,
   Snackbar,
-  createTheme,
+  TextField,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'src/store/Store';
 import { AppState } from 'src/store/Store';
-import { lockUser, unlockUser, getUsers, updateUser } from 'src/services/userService';
+import { lockUser, unlockUser, getUsers, updateUser, createAdmins } from 'src/services/userService';
 import UserFilter from './UserFilter';
+import TopCards from 'src/components/dashboards/modern/TopCards';
+import { TextFieldProps } from '@mui/material/TextField';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export enum USER_ROLE {
   SUPER_ADMIN = 'SUPER_ADMIN',
@@ -43,19 +51,27 @@ export enum USER_ROLE {
   DEMANDE_ADMIN = 'DEMANDE_ADMIN',
   CITIZEN = 'CITIZEN',
   ORGANIZATION = 'ORGANIZATION',
+  BUSINESS = 'BUSINESS',
+}
+export enum ADMINS_ROLES {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  PERMISSION_ADMIN = 'PERMISSION_ADMIN',
+  CONTESTATION_ADMIN = 'CONTESTATION_ADMIN',
+  DEMANDE_ADMIN = 'DEMANDE_ADMIN',
 }
 
-interface User {
+export interface User {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-  role: USER_ROLE;
+  password?: string; // Add password field
+  role: USER_ROLE | ADMINS_ROLES;
   birthDate: string;
   phoneNumber: string;
-  cin: string;
-  idAssociation: string;
-  job: string;
+  cin?: string;
+  idAssociation?: string;
+  job?: string;
   profile_photo: string;
   locked: boolean;
 }
@@ -74,6 +90,72 @@ const UserView = () => {
   } | null>(null);
   const customizer = useSelector((state: AppState) => state.customizer);
   const direction = customizer.isLanguage === 'ar' ? 'rtl' : 'ltr';
+
+  const [openCreate, setOpenCreate] = useState(false);
+  const [newUser, setNewUser] = useState<Partial<User>>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    role: USER_ROLE.CITIZEN,
+    birthDate: '',
+    phoneNumber: '',
+    profile_photo: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+    setPasswordError(e.target.value !== newUser.password);
+  };
+
+  const handleOpenCreate = () => {
+    setOpenCreate(true);
+  };
+
+  const handleCloseCreate = () => {
+    setOpenCreate(false);
+    setNewUser({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      role: USER_ROLE.CITIZEN,
+      birthDate: '',
+      phoneNumber: '',
+      profile_photo: '',
+    });
+  };
+
+  const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewUser({ ...newUser, [name]: value });
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<USER_ROLE | ADMINS_ROLES>) => {
+    const { name, value } = e.target;
+    setNewUser({ ...newUser, [name]: value as USER_ROLE | ADMINS_ROLES });
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setNewUser({ ...newUser, birthDate: date ? date.toISOString().split('T')[0] : '' });
+  };
+
+  const handleSubmitCreateUser = async () => {
+    await handleCreateUser(newUser);
+    handleCloseCreate();
+  };
 
   const fetchUsers = useCallback(
     async (filters = {}) => {
@@ -147,16 +229,30 @@ const UserView = () => {
     }
   };
 
+  const handleCreateUser = async (data: Partial<User>) => {
+    try {
+      await createAdmins(data);
+      fetchUsers();
+      setAlert({ message: t('UserCreatedSuccessfully'), severity: 'success' });
+    } catch (error) {
+      console.error('Error creating user:', error);
+      setAlert({ message: t('ErrorCreatingUser'), severity: 'error' });
+    }
+  };
+
   const handleFilter = (filters: any) => {
     fetchUsers(filters);
   };
 
   return (
-    <Box p={3}>
+    <Box p={3} dir={direction}>
       <Typography variant="h4" gutterBottom dir={direction}>
         {t('Users')}
       </Typography>
       <UserFilter onFilter={handleFilter} />
+      <Button onClick={handleOpenCreate} variant="contained" color="primary">
+        {t('Create User')}
+      </Button>
       <TableContainer component={Paper}>
         <Table dir={direction}>
           <TableHead>
@@ -199,12 +295,12 @@ const UserView = () => {
                 key={user.id}
                 style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
               >
-                <TableCell>{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <Stack direction="row" spacing={1}>
+                <TableCell align="center">{user.firstName}</TableCell>
+                <TableCell align="center">{user.lastName}</TableCell>
+                <TableCell align="center">{user.email}</TableCell>
+                <TableCell align="center">{user.role}</TableCell>
+                <TableCell align="center">
+                  <Stack direction="row" spacing={1} justifyContent="center">
                     <Tooltip title={t('View User')}>
                       <IconButton onClick={() => handleViewUser(user)}>
                         <VisibilityIcon />
@@ -318,6 +414,124 @@ const UserView = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog dir={direction} open={openCreate} onClose={handleCloseCreate} maxWidth="md" fullWidth>
+        <DialogTitle>{t('Create User')}</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label={t('First Name')}
+            name="firstName"
+            fullWidth
+            value={newUser.firstName}
+            onChange={handleTextFieldChange}
+          />
+          <TextField
+            margin="dense"
+            label={t('Last Name')}
+            name="lastName"
+            fullWidth
+            value={newUser.lastName}
+            onChange={handleTextFieldChange}
+          />
+          <TextField
+            margin="dense"
+            label={t('Email')}
+            name="email"
+            fullWidth
+            value={newUser.email}
+            onChange={handleTextFieldChange}
+          />
+          <TextField
+            margin="dense"
+            label={t('Password')}
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            fullWidth
+            value={newUser.password}
+            onChange={handleTextFieldChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
+          <TextField
+            margin="dense"
+            label={t('Confirm Password')}
+            name="confirmPassword"
+            type={showPassword ? 'text' : 'password'}
+            fullWidth
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            error={passwordError}
+            helperText={passwordError ? t('Passwords do not match') : ''}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              ),
+            }}
+          />
+          <Select
+            margin="dense"
+            label={t('Role')}
+            name="role"
+            fullWidth
+            value={newUser.role || ''}
+            onChange={handleSelectChange}
+          >
+            {Object.values(ADMINS_ROLES).map((role) => (
+              <MenuItem key={role} value={role}>
+                {t(role)}
+              </MenuItem>
+            ))}
+          </Select>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label={t('Birth Date')}
+              value={newUser.birthDate ? new Date(newUser.birthDate) : null}
+              onChange={handleDateChange}
+              maxDate={new Date()}
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} fullWidth margin="dense" />
+              )}
+            />
+          </LocalizationProvider>
+          <TextField
+            margin="dense"
+            label={t('Phone Number')}
+            name="phoneNumber"
+            fullWidth
+            value={newUser.phoneNumber}
+            onChange={handleTextFieldChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCreate} color="secondary">
+            {t('Cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmitCreateUser}
+            color="primary"
+            disabled={passwordError || !newUser.password || !confirmPassword}
+          >
+            {t('Create')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {alert && (
         <Snackbar
           open

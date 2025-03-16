@@ -365,12 +365,12 @@ const EventView = () => {
                 key={event.id}
                 style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
               >
-                <TableCell>{event.name}</TableCell>
-                <TableCell>{event.description}</TableCell>
-                <TableCell>{event.location}</TableCell>
-                <TableCell>{new Date(event.date).toLocaleString()}</TableCell>
-                <TableCell>{t(event.type)}</TableCell>
-                <TableCell>
+                <TableCell align="center">{event.name}</TableCell>
+                <TableCell align="center">{event.description}</TableCell>
+                <TableCell align="center">{event.location}</TableCell>
+                <TableCell align="center">{new Date(event.date).toLocaleString()}</TableCell>
+                <TableCell align="center">{t(event.type)}</TableCell>
+                <TableCell align="center">
                   <Chip
                     label={getTranslatedStatus(event.status)}
                     color={
@@ -383,7 +383,7 @@ const EventView = () => {
                     sx={{ minWidth: 100 }}
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <Stack direction="row" spacing={1}>
                     <Tooltip title={t('View Event')}>
                       <IconButton onClick={() => handleViewEvent(event)}>

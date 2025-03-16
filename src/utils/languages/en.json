@@ -138,5 +138,13 @@
     "Logout": "Logout",
     "My Profile": "My Profile",
     "Account Settings": "Account Settings",
-    "Login failed. Please check your credentials and try again.": "Login failed. Please check your credentials and try again."
+    "Login failed. Please check your credentials and try again.": "Login failed. Please check your credentials and try again.",
+    "User not found.": "User not found.",
+    "Old password is required to update the password.": "Old password is required to update the password.",
+    "Old password is incorrect.": "Old password is incorrect.",
+    "You have used this password before. Please choose a different password.": "You have used this password before. Please choose a different password.",
+    "Only SUPER_ADMIN can create admins": "Only SUPER_ADMIN can create admins",
+    "Only a SUPER_ADMIN can create another SUPER_ADMIN": "Only a SUPER_ADMIN can create another SUPER_ADMIN",
+    "Email already in use": "Email already in use",
+    "Create User": "Create User"
 }

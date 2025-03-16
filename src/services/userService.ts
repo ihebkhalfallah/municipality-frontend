@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken } from './authService';
+import { User } from 'src/views/apps/users/UserView';
 
 const API_URL = process.env.REACT_APP_API_URL + '/users';
 
@@ -28,8 +29,8 @@ export const getUserById = async (id: number) => {
   return response.data;
 };
 
-export const createUser = async (data: any) => {
-  const response = await axios.post(API_URL, data, getAuthHeaders());
+export const createAdmins = async (data: Partial<User>) => {
+  const response = await axios.post(`${API_URL}/create-admin`, data, getAuthHeaders());
   return response.data;
 };
 

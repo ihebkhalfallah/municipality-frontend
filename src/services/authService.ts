@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { getUserById } from './userService';
 
-const API_URL = process.env.REACT_APP_API_URL + '/auth/login';
+const API_URL = process.env.REACT_APP_API_URL + '/auth';
 
 interface User {
   id: number;
@@ -22,7 +22,7 @@ interface User {
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post(API_URL, { email, password });
+    const response = await axios.post(`${API_URL}/login`, { email, password });
     const { accessToken, user } = response.data;
 
     if (user.locked) {
@@ -67,3 +67,4 @@ export const getUserRole = () => {
   }
   return user.role;
 };
+
