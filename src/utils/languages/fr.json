@@ -150,5 +150,9 @@
     "Only SUPER_ADMIN can create admins": "Seul le SUPER_ADMIN peut créer des administrateurs",
     "Only a SUPER_ADMIN can create another SUPER_ADMIN": "Seul un SUPER_ADMIN peut créer un autre SUPER_ADMIN",
     "Email already in use": "Email déjà utilisé",
-    "Create User": "Créer un utilisateur"
+    "Create User": "Créer un utilisateur",
+    "Monthly Demande Overview": "Aperçu mensuel des demandes",
+    "Monthly Trends": "Tendances mensuelles",
+    "Count": "Nombre",
+    "Month": "Mois"
 }

@@ -146,5 +146,9 @@
     "Only SUPER_ADMIN can create admins": "فقط SUPER_ADMIN يمكنه إنشاء المسؤولين",
     "Only a SUPER_ADMIN can create another SUPER_ADMIN": "فقط SUPER_ADMIN يمكنه إنشاء SUPER_ADMIN آخر",
     "Email already in use": "البريد الإلكتروني مستخدم بالفعل",
-    "Create User": "إنشاء مستخدم"
+    "Create User": "إنشاء مستخدم",
+    "Monthly Demande Overview": "النظرة العامة الشهرية للطلبات",
+    "Monthly Trends": "الاتجاهات الشهرية",
+    "Count": "العدد",
+    "Month": "الشهر"
 }

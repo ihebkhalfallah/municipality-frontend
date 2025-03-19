@@ -246,310 +246,427 @@ const UserView = () => {
 
   return (
     <Box p={3} dir={direction}>
-      <Typography variant="h4" gutterBottom dir={direction}>
-        {t('Users')}
-      </Typography>
-      <UserFilter onFilter={handleFilter} />
-      <Button onClick={handleOpenCreate} variant="contained" color="primary">
-        {t('Create User')}
-      </Button>
-      <TableContainer component={Paper}>
-        <Table dir={direction}>
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('First Name')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Last Name')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Email')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Role')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Actions')}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user, index) => (
-              <TableRow
-                key={user.id}
-                style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
-              >
-                <TableCell align="center">{user.firstName}</TableCell>
-                <TableCell align="center">{user.lastName}</TableCell>
-                <TableCell align="center">{user.email}</TableCell>
-                <TableCell align="center">{user.role}</TableCell>
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1} justifyContent="center">
-                    <Tooltip title={t('View User')}>
-                      <IconButton onClick={() => handleViewUser(user)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    {user.locked ? (
-                      <Tooltip title={t('Unlock User')}>
-                        <IconButton onClick={() => handleUnlockUser(user.id)}>
-                          <LockOpenIcon />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip title={t('Lock User')}>
-                        <IconButton onClick={() => handleLockUser(user.id)}>
-                          <LockIcon />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={totalUsers}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage={t('rows per page')}
-          labelDisplayedRows={({ from, to, count }) => {
-            if (direction === 'rtl') {
-              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
-                'of',
-              )} ${to}-${from}`;
-            } else {
-              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
-            }
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at top right, #f7f7f7 0%, transparent 60%)',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 600,
+            background: 'linear-gradient(45deg, #1976d2, #64b5f6)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            mb: 2,
           }}
           dir={direction}
+        >
+          {t('Users')}
+        </Typography>
+
+        <Box
           sx={{
-            '& .MuiTablePagination-actions': {
-              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
-            },
-            '& .MuiTablePagination-actions .MuiIconButton-root': {
-              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
+            mb: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
+          <Button
+            onClick={handleOpenCreate}
+            variant="contained"
+            sx={{
+              backgroundColor: 'primary.main',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+              },
+              transition: 'all 0.2s ease-in-out',
+            }}
+          >
+            {t('Create User')}
+          </Button>
+        </Box>
+
+        <UserFilter onFilter={handleFilter} />
+
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 2,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+            '& .MuiTable-root': {
+              borderCollapse: 'separate',
+              borderSpacing: '0 8px',
             },
           }}
-        />
-      </TableContainer>
-
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
-        <DialogTitle sx={{ fontWeight: 600 }}>{t('User Details')}</DialogTitle>
-        <DialogContent sx={{ zIndex: 1300 }}>
-          {alert && (
-            <Snackbar
-              open
-              autoHideDuration={6000}
-              onClose={() => setAlert(null)}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              sx={{ zIndex: 9999 }}
-            >
-              <Alert
-                variant="filled"
-                onClose={() => setAlert(null)}
-                severity={alert.severity}
-                sx={{ width: '100%', zIndex: 9999 }}
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>
-          )}
-
-          <Card variant="outlined" sx={{ p: 2, mb: 2, zIndex: 1300 }}>
-            <CardContent>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-                {selectedUser?.firstName} {selectedUser?.lastName}
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('Email')}:</strong> {selectedUser?.email}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('Role')}:</strong> {selectedUser?.role}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('Birth Date')}:</strong>{' '}
-                {new Date(selectedUser?.birthDate || '').toLocaleString()}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('Phone Number')}:</strong> {selectedUser?.phoneNumber}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('CIN')}:</strong> {selectedUser?.cin}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('ID Association')}:</strong> {selectedUser?.idAssociation}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                <strong>{t('Job')}:</strong> {selectedUser?.job}
-              </Typography>
-            </CardContent>
-          </Card>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleClose} variant="outlined" color="secondary">
-            {t('Close')}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog dir={direction} open={openCreate} onClose={handleCloseCreate} maxWidth="md" fullWidth>
-        <DialogTitle>{t('Create User')}</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label={t('First Name')}
-            name="firstName"
-            fullWidth
-            value={newUser.firstName}
-            onChange={handleTextFieldChange}
-          />
-          <TextField
-            margin="dense"
-            label={t('Last Name')}
-            name="lastName"
-            fullWidth
-            value={newUser.lastName}
-            onChange={handleTextFieldChange}
-          />
-          <TextField
-            margin="dense"
-            label={t('Email')}
-            name="email"
-            fullWidth
-            value={newUser.email}
-            onChange={handleTextFieldChange}
-          />
-          <TextField
-            margin="dense"
-            label={t('Password')}
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            fullWidth
-            value={newUser.password}
-            onChange={handleTextFieldChange}
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              ),
-            }}
-          />
-          <TextField
-            margin="dense"
-            label={t('Confirm Password')}
-            name="confirmPassword"
-            type={showPassword ? 'text' : 'password'}
-            fullWidth
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            error={passwordError}
-            helperText={passwordError ? t('Passwords do not match') : ''}
-            InputProps={{
-              endAdornment: (
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              ),
-            }}
-          />
-          <Select
-            margin="dense"
-            label={t('Role')}
-            name="role"
-            fullWidth
-            value={newUser.role || ''}
-            onChange={handleSelectChange}
-          >
-            {Object.values(ADMINS_ROLES).map((role) => (
-              <MenuItem key={role} value={role}>
-                {t(role)}
-              </MenuItem>
-            ))}
-          </Select>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label={t('Birth Date')}
-              value={newUser.birthDate ? new Date(newUser.birthDate) : null}
-              onChange={handleDateChange}
-              maxDate={new Date()}
-              renderInput={(params: TextFieldProps) => (
-                <TextField {...params} fullWidth margin="dense" />
-              )}
-            />
-          </LocalizationProvider>
-          <TextField
-            margin="dense"
-            label={t('Phone Number')}
-            name="phoneNumber"
-            fullWidth
-            value={newUser.phoneNumber}
-            onChange={handleTextFieldChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseCreate} color="secondary">
-            {t('Cancel')}
-          </Button>
-          <Button
-            onClick={handleSubmitCreateUser}
-            color="primary"
-            disabled={passwordError || !newUser.password || !confirmPassword}
-          >
-            {t('Create')}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {alert && (
-        <Snackbar
-          open
-          autoHideDuration={6000}
-          onClose={() => setAlert(null)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          sx={{ zIndex: 9999 }}
         >
-          <Alert
-            variant="filled"
+          <Table dir={direction}>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('First Name')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Last Name')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Email')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Role')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Actions')}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user, index) => (
+                <TableRow
+                  key={user.id}
+                  sx={{
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: '#f5f9ff',
+                      transform: 'scale(1.01)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    },
+                  }}
+                >
+                  <TableCell align="center">{user.firstName}</TableCell>
+                  <TableCell align="center">{user.lastName}</TableCell>
+                  <TableCell align="center">{user.email}</TableCell>
+                  <TableCell align="center">{user.role}</TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1} justifyContent="center">
+                      <Tooltip title={t('View User')}>
+                        <IconButton onClick={() => handleViewUser(user)}>
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip>
+                      {user.locked ? (
+                        <Tooltip title={t('Unlock User')}>
+                          <IconButton onClick={() => handleUnlockUser(user.id)}>
+                            <LockOpenIcon />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title={t('Lock User')}>
+                          <IconButton onClick={() => handleLockUser(user.id)}>
+                            <LockIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalUsers}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={t('rows per page')}
+            labelDisplayedRows={({ from, to, count }) => {
+              if (direction === 'rtl') {
+                return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                  'of',
+                )} ${to}-${from}`;
+              } else {
+                return `${from}-${to} ${t('of')} ${
+                  count !== -1 ? count : `${t('more than')} ${to}`
+                }`;
+              }
+            }}
+            dir={direction}
+            sx={{
+              '& .MuiTablePagination-actions': {
+                flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
+              },
+              '& .MuiTablePagination-actions .MuiIconButton-root': {
+                transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
+              },
+            }}
+          />
+        </TableContainer>
+
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
+          <DialogTitle sx={{ fontWeight: 600 }}>{t('User Details')}</DialogTitle>
+          <DialogContent sx={{ zIndex: 1300 }}>
+            {alert && (
+              <Snackbar
+                open
+                autoHideDuration={6000}
+                onClose={() => setAlert(null)}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                sx={{ zIndex: 9999 }}
+              >
+                <Alert
+                  variant="filled"
+                  onClose={() => setAlert(null)}
+                  severity={alert.severity}
+                  sx={{ width: '100%', zIndex: 9999 }}
+                >
+                  {alert.message}
+                </Alert>
+              </Snackbar>
+            )}
+
+            <Card variant="outlined" sx={{ p: 2, mb: 2, zIndex: 1300 }}>
+              <CardContent>
+                <Typography variant="h6" fontWeight={600} gutterBottom>
+                  {selectedUser?.firstName} {selectedUser?.lastName}
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('Email')}:</strong> {selectedUser?.email}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('Role')}:</strong> {selectedUser?.role}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('Birth Date')}:</strong>{' '}
+                  {new Date(selectedUser?.birthDate || '').toLocaleString()}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('Phone Number')}:</strong> {selectedUser?.phoneNumber}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('CIN')}:</strong> {selectedUser?.cin}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('ID Association')}:</strong> {selectedUser?.idAssociation}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  <strong>{t('Job')}:</strong> {selectedUser?.job}
+                </Typography>
+              </CardContent>
+            </Card>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={handleClose} variant="outlined" color="secondary">
+              {t('Close')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          dir={direction}
+          open={openCreate}
+          onClose={handleCloseCreate}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>{t('Create User')}</DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              label={t('First Name')}
+              name="firstName"
+              fullWidth
+              value={newUser.firstName}
+              onChange={handleTextFieldChange}
+            />
+            <TextField
+              margin="dense"
+              label={t('Last Name')}
+              name="lastName"
+              fullWidth
+              value={newUser.lastName}
+              onChange={handleTextFieldChange}
+            />
+            <TextField
+              margin="dense"
+              label={t('Email')}
+              name="email"
+              fullWidth
+              value={newUser.email}
+              onChange={handleTextFieldChange}
+            />
+            <TextField
+              margin="dense"
+              label={t('Password')}
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              fullWidth
+              value={newUser.password}
+              onChange={handleTextFieldChange}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                ),
+              }}
+            />
+            <TextField
+              margin="dense"
+              label={t('Confirm Password')}
+              name="confirmPassword"
+              type={showPassword ? 'text' : 'password'}
+              fullWidth
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              error={passwordError}
+              helperText={passwordError ? t('Passwords do not match') : ''}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                ),
+              }}
+            />
+            <Select
+              margin="dense"
+              label={t('Role')}
+              name="role"
+              fullWidth
+              value={newUser.role || ''}
+              onChange={handleSelectChange}
+            >
+              {Object.values(ADMINS_ROLES).map((role) => (
+                <MenuItem key={role} value={role}>
+                  {t(role)}
+                </MenuItem>
+              ))}
+            </Select>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label={t('Birth Date')}
+                value={newUser.birthDate ? new Date(newUser.birthDate) : null}
+                onChange={handleDateChange}
+                maxDate={new Date()}
+                renderInput={(params: TextFieldProps) => (
+                  <TextField {...params} fullWidth margin="dense" />
+                )}
+              />
+            </LocalizationProvider>
+            <TextField
+              margin="dense"
+              label={t('Phone Number')}
+              name="phoneNumber"
+              fullWidth
+              value={newUser.phoneNumber}
+              onChange={handleTextFieldChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseCreate} color="secondary">
+              {t('Cancel')}
+            </Button>
+            <Button
+              onClick={handleSubmitCreateUser}
+              color="primary"
+              disabled={passwordError || !newUser.password || !confirmPassword}
+            >
+              {t('Create')}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {alert && (
+          <Snackbar
+            open
+            autoHideDuration={6000}
             onClose={() => setAlert(null)}
-            severity={alert.severity}
-            sx={{ width: '100%', zIndex: 9999 }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            sx={{ zIndex: 9999 }}
           >
-            {alert.message}
-          </Alert>
-        </Snackbar>
-      )}
+            <Alert
+              variant="filled"
+              onClose={() => setAlert(null)}
+              severity={alert.severity}
+              sx={{ width: '100%', zIndex: 9999 }}
+            >
+              {alert.message}
+            </Alert>
+          </Snackbar>
+        )}
+      </Box>
     </Box>
   );
 };

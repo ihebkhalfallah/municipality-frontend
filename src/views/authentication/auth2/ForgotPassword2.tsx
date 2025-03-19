@@ -5,9 +5,10 @@ import Logo from 'src/layouts/full/shared/logo/Logo';
 import PageContainer from 'src/components/container/PageContainer';
 
 import AuthForgotPassword from '../authForms/AuthForgotPassword';
+import TwoSteps2 from './TwoSteps2';
 
 const ForgotPassword2 = () => (
-  <PageContainer title="Forgot Password" description="this is Forgot Password page">
+  <PageContainer title="نسيت كلمة المرور" description="هذه صفحة نسيت كلمة المرور">
     <Box
       sx={{
         position: 'relative',
@@ -44,8 +45,8 @@ const ForgotPassword2 = () => (
               variant="subtitle2"
               fontWeight="400"
             >
-              Please enter the email address associated with your account and We will email you a
-              link to reset your password.
+              يرجى إدخال عنوان البريد الإلكتروني المرتبط بحسابك وسنرسل لك رابطًا لإعادة تعيين كلمة
+              المرور الخاصة بك.
             </Typography>
             <AuthForgotPassword />
           </Card>

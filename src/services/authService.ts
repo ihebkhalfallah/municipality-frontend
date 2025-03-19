@@ -26,7 +26,7 @@ export const login = async (email: string, password: string) => {
     const { accessToken, user } = response.data;
 
     if (user.locked) {
-      throw new Error('Your account is locked.');
+      throw new Error('تم قفل حسابك.');
     }
 
     Cookies.set('token', accessToken);
@@ -36,10 +36,12 @@ export const login = async (email: string, password: string) => {
 
     return { ...response.data, user: fullUserInfo };
   } catch (error: any) {
-    if (error.response && error.response.data.message === 'Your account is locked.') {
-      throw new Error('Your account is locked.');
+    if (error.response && error.response.data.message === 'تم قفل حسابك.') {
+      throw new Error('تم قفل حسابك.');
     }
-    throw new Error('Login failed. Please check your credentials and try again.');
+    throw new Error(
+      'فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك والمحاولة مرة أخرى.',
+    );
   }
 };
 
@@ -68,3 +70,20 @@ export const getUserRole = () => {
   return user.role;
 };
 
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/forgot-password`, { email });
+    return response.data;
+  } catch (error: any) {
+    throw new Error('فشل في إرسال رابط إعادة التعيين.');
+  }
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/reset-password`, { token, newPassword });
+    return response.data;
+  } catch (error: any) {
+    throw new Error('فشل في إعادة تعيين كلمة المرور.');
+  }
+};

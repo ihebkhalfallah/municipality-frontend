@@ -301,134 +301,178 @@ const DemandeView = () => {
 
   return (
     <Box p={3} dir={direction}>
-      <Typography variant="h4" gutterBottom>
-        {t('Demandes')}
-      </Typography>
-      <DemandeFilter onFilter={handleFilter} />
-      <TableContainer component={Paper}>
-        <Table dir={direction}>
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Name')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Location')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Description')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Date')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Type')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Status')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Actions')}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {demandes.map((demande, index) => (
-              <TableRow
-                key={demande.id}
-                style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
-              >
-                <TableCell align="center">{demande.name}</TableCell>
-                <TableCell align="center">{demande.description}</TableCell>
-                <TableCell align="center">{demande.location}</TableCell>
-                <TableCell align="center">{new Date(demande.date).toLocaleString()}</TableCell>
-                <TableCell align="center">{t(demande.type)}</TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getTranslatedStatus(demande.status)}
-                    color={
-                      demande.status === STATUS.ACCEPTED
-                        ? 'success'
-                        : demande.status === STATUS.REJECTED
-                        ? 'error'
-                        : 'warning'
-                    }
-                    sx={{ minWidth: 100 }}
-                  />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at top right, #f7f7f7 0%, transparent 60%)',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 600,
+            background: 'linear-gradient(45deg, #1976d2, #64b5f6)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            mb: 2,
+          }}
+        >
+          {t('Demandes')}
+        </Typography>
+
+        <DemandeFilter onFilter={handleFilter} />
+
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 2,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+            '& .MuiTable-root': {
+              borderCollapse: 'separate',
+              borderSpacing: '0 8px',
+            },
+          }}
+        >
+          <Table dir={direction}>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Name')}
                 </TableCell>
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1}>
-                    <Tooltip title={t('View Demande')}>
-                      <IconButton onClick={() => handleViewDemande(demande)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Delete Demande')}>
-                      <IconButton onClick={() => handleDeleteDemande(demande.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Accept Demande')}>
-                      <IconButton onClick={() => handleAcceptDemande(demande.id)}>
-                        <CheckCircleIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Location')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Description')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Date')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Type')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Status')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Actions')}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={totalDemandes}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage={t('rows per page')}
-          labelDisplayedRows={({ from, to, count }) => {
-            if (direction === 'rtl') {
-              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
-                'of',
-              )} ${to}-${from}`;
-            } else {
-              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
-            }
-          }}
-          dir={direction}
-          sx={{
-            '& .MuiTablePagination-actions': {
-              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
-            },
-            '& .MuiTablePagination-actions .MuiIconButton-root': {
-              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
-            },
-          }}
-        />
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {demandes.map((demande, index) => (
+                <TableRow
+                  key={demande.id}
+                  style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
+                >
+                  <TableCell align="center">{demande.name}</TableCell>
+                  <TableCell align="center">{demande.description}</TableCell>
+                  <TableCell align="center">{demande.location}</TableCell>
+                  <TableCell align="center">{new Date(demande.date).toLocaleString()}</TableCell>
+                  <TableCell align="center">{t(demande.type)}</TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={getTranslatedStatus(demande.status)}
+                      color={
+                        demande.status === STATUS.ACCEPTED
+                          ? 'success'
+                          : demande.status === STATUS.REJECTED
+                          ? 'error'
+                          : 'warning'
+                      }
+                      sx={{ minWidth: 100 }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title={t('View Demande')}>
+                        <IconButton onClick={() => handleViewDemande(demande)}>
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Delete Demande')}>
+                        <IconButton onClick={() => handleDeleteDemande(demande.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Accept Demande')}>
+                        <IconButton onClick={() => handleAcceptDemande(demande.id)}>
+                          <CheckCircleIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalDemandes}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={t('rows per page')}
+            labelDisplayedRows={({ from, to, count }) => {
+              if (direction === 'rtl') {
+                return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                  'of',
+                )} ${to}-${from}`;
+              } else {
+                return `${from}-${to} ${t('of')} ${
+                  count !== -1 ? count : `${t('more than')} ${to}`
+                }`;
+              }
+            }}
+            dir={direction}
+            sx={{
+              '& .MuiTablePagination-actions': {
+                flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
+              },
+              '& .MuiTablePagination-actions .MuiIconButton-root': {
+                transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
+              },
+            }}
+          />
+        </TableContainer>
+      </Box>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
         <DialogTitle sx={{ fontWeight: 600 }}>{t('Demande Details')}</DialogTitle>

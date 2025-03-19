@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash';
-import { IconFileText, IconCalendarEvent, IconShieldCheck } from '@tabler/icons';
+import { IconFileText, IconCalendarEvent, IconShieldCheck, IconChartBar } from '@tabler/icons';
 
 interface MenuitemsType {
   [x: string]: any;
@@ -49,6 +49,13 @@ const Menuitems: MenuitemsType[] = [
     title: 'Users',
     icon: IconShieldCheck,
     href: '/dashboards/users',
+    allowedRoles: ['SUPER_ADMIN'],
+  },
+  {
+    id: uniqueId(),
+    title: 'Dashboard Overview',
+    icon: IconChartBar,
+    href: '/dashboards/overview',
     allowedRoles: ['SUPER_ADMIN'],
   },
   // {

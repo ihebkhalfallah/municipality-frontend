@@ -307,135 +307,276 @@ const EventView = () => {
 
   return (
     <Box p={3} dir={direction}>
-      <Typography variant="h4" gutterBottom>
-        {t('Events')}
-      </Typography>
-      <EventFilter onFilter={handleFilter} />
-      <TableContainer component={Paper}>
-        <Table dir={direction}>
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Name')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Description')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Location')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Date')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Type')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Status')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Actions')}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {events.map((event, index) => (
-              <TableRow
-                key={event.id}
-                style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
-              >
-                <TableCell align="center">{event.name}</TableCell>
-                <TableCell align="center">{event.description}</TableCell>
-                <TableCell align="center">{event.location}</TableCell>
-                <TableCell align="center">{new Date(event.date).toLocaleString()}</TableCell>
-                <TableCell align="center">{t(event.type)}</TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getTranslatedStatus(event.status)}
-                    color={
-                      event.status === STATUS.ACCEPTED
-                        ? 'success'
-                        : event.status === STATUS.REJECTED
-                        ? 'error'
-                        : 'warning'
-                    }
-                    sx={{ minWidth: 100 }}
-                  />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at top right, #f7f7f7 0%, transparent 60%)',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 600,
+            background: 'linear-gradient(45deg, #1976d2, #64b5f6)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            mb: 2,
+          }}
+        >
+          {t('Events')}
+        </Typography>
+
+        <EventFilter onFilter={handleFilter} />
+
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 2,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+            '& .MuiTable-root': {
+              borderCollapse: 'separate',
+              borderSpacing: '0 8px',
+            },
+          }}
+        >
+          <Table dir={direction}>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Name')}
                 </TableCell>
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1}>
-                    <Tooltip title={t('View Event')}>
-                      <IconButton onClick={() => handleViewEvent(event)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Delete Event')}>
-                      <IconButton onClick={() => handleDeleteEvent(event.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Accept Event')}>
-                      <IconButton onClick={() => handleAcceptEvent(event.id)}>
-                        <CheckCircleIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Description')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Location')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Date')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Type')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Status')}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '15px',
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.light',
+                    backgroundColor: '#f8fafc',
+                  }}
+                  align="center"
+                >
+                  {t('Actions')}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={totalEvents}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage={t('rows per page')}
-          labelDisplayedRows={({ from, to, count }) => {
-            if (direction === 'rtl') {
-              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
-                'of',
-              )} ${to}-${from}`;
-            } else {
-              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
-            }
-          }}
-          dir={direction}
-          sx={{
-            '& .MuiTablePagination-actions': {
-              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
-            },
-            '& .MuiTablePagination-actions .MuiIconButton-root': {
-              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
-            },
-          }}
-        />
-      </TableContainer>
-
+            </TableHead>
+            <TableBody>
+              {events.map((event, index) => (
+                <TableRow
+                  key={event.id}
+                  sx={{
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: '#f5f9ff',
+                      transform: 'scale(1.01)',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                    },
+                  }}
+                >
+                  <TableCell align="center">{event.name}</TableCell>
+                  <TableCell align="center">{event.description}</TableCell>
+                  <TableCell align="center">{event.location}</TableCell>
+                  <TableCell align="center">{new Date(event.date).toLocaleString()}</TableCell>
+                  <TableCell align="center">{t(event.type)}</TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={getTranslatedStatus(event.status)}
+                      color={
+                        event.status === STATUS.ACCEPTED
+                          ? 'success'
+                          : event.status === STATUS.REJECTED
+                          ? 'error'
+                          : 'warning'
+                      }
+                      sx={{
+                        minWidth: 100,
+                        borderRadius: '8px',
+                        fontWeight: 600,
+                        fontSize: '0.85rem',
+                        '& .MuiChip-label': {
+                          px: 2,
+                          py: 0.5,
+                        },
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1} justifyContent="center">
+                      <Tooltip title={t('View Event')} arrow>
+                        <IconButton
+                          onClick={() => handleViewEvent(event)}
+                          sx={{
+                            backgroundColor: 'primary.light',
+                            '&:hover': {
+                              backgroundColor: 'primary.main',
+                              '& svg': {
+                                color: 'white',
+                              },
+                            },
+                          }}
+                        >
+                          <VisibilityIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Delete Event')} arrow>
+                        <IconButton
+                          onClick={() => handleDeleteEvent(event.id)}
+                          sx={{
+                            backgroundColor: 'error.light',
+                            '&:hover': {
+                              backgroundColor: 'error.main',
+                              '& svg': {
+                                color: 'white',
+                              },
+                            },
+                          }}
+                        >
+                          <DeleteIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Accept Event')} arrow>
+                        <IconButton
+                          onClick={() => handleAcceptEvent(event.id)}
+                          sx={{
+                            backgroundColor: 'success.light',
+                            '&:hover': {
+                              backgroundColor: 'success.main',
+                              '& svg': {
+                                color: 'white',
+                              },
+                            },
+                          }}
+                        >
+                          <CheckCircleIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalEvents}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={t('rows per page')}
+            labelDisplayedRows={({ from, to, count }) => {
+              if (direction === 'rtl') {
+                return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                  'of',
+                )} ${to}-${from}`;
+              } else {
+                return `${from}-${to} ${t('of')} ${
+                  count !== -1 ? count : `${t('more than')} ${to}`
+                }`;
+              }
+            }}
+            dir={direction}
+            sx={{
+              '& .MuiTablePagination-actions': {
+                flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
+              },
+              '& .MuiTablePagination-actions .MuiIconButton-root': {
+                transform: direction === 'rtl' ? 'scaleX(-1)' : 'none',
+              },
+            }}
+          />
+        </TableContainer>
+      </Box>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
         <DialogTitle sx={{ fontWeight: 600 }}>{t('Event Details')}</DialogTitle>
         <DialogContent sx={{ zIndex: 1300 }}>

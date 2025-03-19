@@ -6,6 +6,8 @@ import { getToken, getUserRole } from 'src/services/authService';
 import EventView from 'src/views/apps/event/event-view';
 import AuthorizationView from 'src/views/apps/authorization/AuthorizationView';
 import UsersView, { USER_ROLE } from 'src/views/apps/users/UserView';
+import ResetPassword from 'src/views/authentication/auth2/ResetPassword';
+import StatsOverview from '../views/dashboard/StatsOverview';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -138,6 +140,15 @@ const Router = [
         element: (
           <PrivateRoute allowedRoles={['SUPER_ADMIN']}>
             <UsersView />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/dashboards/overview',
+        exact: true,
+        element: (
+          <PrivateRoute allowedRoles={['SUPER_ADMIN']}>
+            <StatsOverview />
           </PrivateRoute>
         ),
       },
@@ -423,8 +434,9 @@ const Router = [
       { path: '/auth/login', element: <Login2 /> },
       { path: '/auth/register', element: <Register /> },
       { path: '/auth/register2', element: <Register2 /> },
-      { path: '/auth/forgot-password', element: <ForgotPassword /> },
-      { path: '/auth/forgot-password2', element: <ForgotPassword2 /> },
+      // { path: '/auth/forgot-password', element: <ForgotPassword /> },
+      { path: '/auth/forgot-password', element: <ForgotPassword2 /> },
+      { path: '/reset-password', element: <ResetPassword /> },
       { path: '/auth/two-steps', element: <TwoSteps /> },
       { path: '/auth/two-steps2', element: <TwoSteps2 /> },
       { path: '/auth/maintenance', element: <Maintenance /> },

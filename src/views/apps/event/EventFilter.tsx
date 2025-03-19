@@ -49,14 +49,34 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
   };
 
   return (
-    <Box mb={3} dir={direction}>
-      <Stack direction="row" spacing={2} alignItems="center">
+    <Box
+      mb={3}
+      dir={direction}
+      sx={{
+        backgroundColor: 'background.paper',
+        borderRadius: 2,
+        p: 3,
+        boxShadow: '0 4px 6px rgba(0,0,0,0.07)',
+      }}
+    >
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        spacing={2}
+        alignItems={{ xs: 'stretch', md: 'center' }}
+      >
         <TextField
           label={t('Name')}
           name="name"
           value={filters.name}
           onChange={handleChange}
           variant="outlined"
+          size="small"
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              backgroundColor: 'background.default',
+            },
+          }}
         />
         <TextField
           label={t('Status')}
@@ -65,7 +85,14 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
           onChange={handleChange}
           variant="outlined"
           select
-          sx={{ minWidth: 150 }}
+          size="small"
+          sx={{
+            minWidth: 150,
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              backgroundColor: 'background.default',
+            },
+          }}
         >
           <MenuItem value="">{t('All')}</MenuItem>
           <MenuItem value="PENDING">{t('Pending')}</MenuItem>
@@ -79,17 +106,46 @@ const EventFilter: React.FC<EventFilterProps> = ({ onFilter }) => {
           onChange={handleChange}
           variant="outlined"
           select
-          sx={{ minWidth: 150 }}
+          size="small"
+          sx={{
+            minWidth: 150,
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              backgroundColor: 'background.default',
+            },
+          }}
         >
           <MenuItem value="">{t('All')}</MenuItem>
           <MenuItem value={EVENT_TYPE.EVENT}>{t('Event')}</MenuItem>
           <MenuItem value={EVENT_TYPE.NEWS}>{t('News')}</MenuItem>
           <MenuItem value={EVENT_TYPE.ANNOUNCEMENT}>{t('Announcement')}</MenuItem>
         </TextField>
-        <Button variant="contained" color="primary" onClick={handleFilter}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleFilter}
+          sx={{
+            borderRadius: 2,
+            textTransform: 'none',
+            px: 4,
+            py: 1,
+            fontWeight: 600,
+          }}
+        >
           {t('Filter')}
         </Button>
-        <Button variant="outlined" color="secondary" onClick={handleClear}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleClear}
+          sx={{
+            borderRadius: 2,
+            textTransform: 'none',
+            px: 4,
+            py: 1,
+            fontWeight: 600,
+          }}
+        >
           {t('Clear')}
         </Button>
       </Stack>

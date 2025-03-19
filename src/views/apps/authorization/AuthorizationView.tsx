@@ -307,141 +307,185 @@ const AuthorizationView = () => {
     direction: customizer.isLanguage === 'ar' ? 'rtl' : 'ltr',
   });
   return (
-    <Box p={3}>
-      <Typography variant="h4" gutterBottom dir={direction}>
-        {t('Authorizations')}
-      </Typography>
-      <AuthorizationFilter onFilter={handleFilter} />
-      <TableContainer component={Paper}>
-        <Table dir={direction}>
-          <TableHead>
-            <TableRow>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Name')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Description')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Location')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Start Date')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('End Date')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Status')}
-              </TableCell>
-              <TableCell
-                sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
-                align="center"
-              >
-                {t('Actions')}
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {authorizations.map((authorization, index) => (
-              <TableRow
-                key={authorization.id}
-                style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
-              >
-                <TableCell align="center">{authorization.name}</TableCell>
-                <TableCell align="center">{authorization.description}</TableCell>
-                <TableCell align="center">{authorization.location}</TableCell>
-                <TableCell align="center">
-                  {new Date(authorization.start_date).toLocaleString()}
+    <Box p={3} dir={direction}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at top right, #f7f7f7 0%, transparent 60%)',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 600,
+            background: 'linear-gradient(45deg, #1976d2, #64b5f6)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            mb: 2,
+          }}
+        >
+          {t('Authorizations')}
+        </Typography>
+
+        <AuthorizationFilter onFilter={handleFilter} />
+
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 2,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+            '& .MuiTable-root': {
+              borderCollapse: 'separate',
+              borderSpacing: '0 8px',
+            },
+          }}
+        >
+          <Table dir={direction}>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Name')}
                 </TableCell>
-                <TableCell align="center">
-                  {new Date(authorization.end_date).toLocaleString()}
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Description')}
                 </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={getTranslatedStatus(authorization.status)}
-                    color={
-                      authorization.status === STATUS.ACCEPTED
-                        ? 'success'
-                        : authorization.status === STATUS.REJECTED
-                        ? 'error'
-                        : 'warning'
-                    }
-                    sx={{ minWidth: 100 }}
-                  />
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Location')}
                 </TableCell>
-                <TableCell align="center">
-                  <Stack direction="row" spacing={1}>
-                    <Tooltip title={t('View Authorization')}>
-                      <IconButton onClick={() => handleViewAuthorization(authorization)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Delete Authorization')}>
-                      <IconButton onClick={() => handleDeleteAuthorization(authorization.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('Accept Authorization')}>
-                      <IconButton onClick={() => handleAcceptAuthorization(authorization.id)}>
-                        <CheckCircleIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Start Date')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('End Date')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Status')}
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#555', fontSize: '16px' }}
+                  align="center"
+                >
+                  {t('Actions')}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={totalAuthorizations}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage={t('rows per page')}
-          labelDisplayedRows={({ from, to, count }) => {
-            if (direction === 'rtl') {
-              // For RTL languages (e.g., Arabic), reverse the `from` and `to` values
-              return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
-                'of',
-              )} ${to}-${from}`;
-            } else {
-              // For LTR languages, use the default format "1-5 of 9"
-              return `${from}-${to} ${t('of')} ${count !== -1 ? count : `${t('more than')} ${to}`}`;
-            }
-          }}
-          dir={direction}
-          sx={{
-            '& .MuiTablePagination-actions': {
-              flexDirection: direction === 'rtl' ? 'row-reverse' : 'row', // Reverse the order of buttons for RTL
-            },
-            '& .MuiTablePagination-actions .MuiIconButton-root': {
-              transform: direction === 'rtl' ? 'scaleX(-1)' : 'none', // Flip the icons horizontally for RTL
-            },
-          }}
-        />
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {authorizations.map((authorization, index) => (
+                <TableRow
+                  key={authorization.id}
+                  style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9f9f9' }}
+                >
+                  <TableCell align="center">{authorization.name}</TableCell>
+                  <TableCell align="center">{authorization.description}</TableCell>
+                  <TableCell align="center">{authorization.location}</TableCell>
+                  <TableCell align="center">
+                    {new Date(authorization.start_date).toLocaleString()}
+                  </TableCell>
+                  <TableCell align="center">
+                    {new Date(authorization.end_date).toLocaleString()}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      label={getTranslatedStatus(authorization.status)}
+                      color={
+                        authorization.status === STATUS.ACCEPTED
+                          ? 'success'
+                          : authorization.status === STATUS.REJECTED
+                          ? 'error'
+                          : 'warning'
+                      }
+                      sx={{ minWidth: 100 }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title={t('View Authorization')}>
+                        <IconButton onClick={() => handleViewAuthorization(authorization)}>
+                          <VisibilityIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Delete Authorization')}>
+                        <IconButton onClick={() => handleDeleteAuthorization(authorization.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('Accept Authorization')}>
+                        <IconButton onClick={() => handleAcceptAuthorization(authorization.id)}>
+                          <CheckCircleIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={totalAuthorizations}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={t('rows per page')}
+            labelDisplayedRows={({ from, to, count }) => {
+              if (direction === 'rtl') {
+                // For RTL languages (e.g., Arabic), reverse the `from` and `to` values
+                return ` ${count !== -1 ? count : `${t('more than')} ${to}`} ${t(
+                  'of',
+                )} ${to}-${from}`;
+              } else {
+                // For LTR languages, use the default format "1-5 of 9"
+                return `${from}-${to} ${t('of')} ${
+                  count !== -1 ? count : `${t('more than')} ${to}`
+                }`;
+              }
+            }}
+            dir={direction}
+            sx={{
+              '& .MuiTablePagination-actions': {
+                flexDirection: direction === 'rtl' ? 'row-reverse' : 'row', // Reverse the order of buttons for RTL
+              },
+              '& .MuiTablePagination-actions .MuiIconButton-root': {
+                transform: direction === 'rtl' ? 'scaleX(-1)' : 'none', // Flip the icons horizontally for RTL
+              },
+            }}
+          />
+        </TableContainer>
+      </Box>
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth sx={{ zIndex: 1300 }}>
         <DialogTitle sx={{ fontWeight: 600 }}>{t('Authorization Details')}</DialogTitle>
