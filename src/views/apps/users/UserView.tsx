@@ -43,6 +43,7 @@ import TopCards from 'src/components/dashboards/modern/TopCards';
 import { TextFieldProps } from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { getCurrentUser } from 'src/services/authService';
 
 export enum USER_ROLE {
   SUPER_ADMIN = 'SUPER_ADMIN',
@@ -71,6 +72,22 @@ export interface User {
   phoneNumber: string;
   cin?: string;
   idAssociation?: string;
+  job?: string;
+  profile_photo: string;
+  locked: boolean;
+}
+
+// Update the CurrentUser interface to match the type from getCurrentUser
+interface CurrentUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  birthDate: string;
+  phoneNumber: string;
+  cin?: string;
+  idAssociation?: number | null; // Changed from string to number | null
   job?: string;
   profile_photo: string;
   locked: boolean;
@@ -106,6 +123,21 @@ const UserView = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        // Cast to unknown first, then to CurrentUser to avoid type mismatch
+        setCurrentUser(user as unknown as CurrentUser);
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -161,14 +193,17 @@ const UserView = () => {
     async (filters = {}) => {
       try {
         const response = await getUsers(page + 1, rowsPerPage, filters);
-        setUsers(response.data);
-        setTotalUsers(response.total);
+        // Filter out current user from the list
+        const filteredUsers = response.data.filter((user: User) => user.id !== currentUser?.id);
+        setUsers(filteredUsers);
+        // Adjust total count to exclude current user
+        setTotalUsers(response.total - (currentUser ? 1 : 0));
       } catch (error) {
         console.error('Error fetching users:', error);
         setAlert({ message: t('ErrorFetchingUsers'), severity: 'error' });
       }
     },
-    [page, rowsPerPage, t],
+    [page, rowsPerPage, t, currentUser],
   );
 
   useEffect(() => {

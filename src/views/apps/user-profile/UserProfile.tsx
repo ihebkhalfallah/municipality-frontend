@@ -118,7 +118,7 @@ const UserProfile = () => {
         const updatedData = Object.keys(formattedData).reduce((acc: Partial<User>, key) => {
           const typedKey = key as keyof FormData;
           if (formattedData[typedKey] !== user[typedKey]) {
-            if (formattedData[typedKey] !== null) {
+            if (formattedData[typedKey] !== null && typedKey !== 'email') {
               acc[typedKey] = formattedData[typedKey] as string;
             }
           }
@@ -200,7 +200,7 @@ const UserProfile = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
-              disabled={!editMode}
+              disabled={true}
             />
             <DatePicker
               label={t('Birth Date')}

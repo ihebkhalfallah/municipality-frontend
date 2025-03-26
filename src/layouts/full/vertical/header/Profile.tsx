@@ -7,6 +7,7 @@ import ProfileImg from 'src/assets/images/profile/user-1.jpg';
 import unlimitedImg from 'src/assets/images/backgrounds/unlimited-bg.png';
 import { removeToken, getCurrentUser } from 'src/services/authService';
 import { useTranslation } from 'react-i18next';
+import { PersonOutline } from '@mui/icons-material';
 
 interface User {
   id: number;
@@ -71,13 +72,12 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src={ProfileImg}
-          alt={ProfileImg}
           sx={{
             width: 35,
             height: 35,
+            bgcolor: 'primary.main',
           }}
-        />
+        ></Avatar>
       </IconButton>
       {/* ------------------------------------------- */}
       {/* Message Dropdown */}
@@ -100,7 +100,15 @@ const Profile = () => {
         <Typography variant="h5">{t('User Profile')}</Typography>
         {user && (
           <Stack direction="row" py={3} spacing={2} alignItems="center">
-            <Avatar src={ProfileImg} alt={ProfileImg} sx={{ width: 95, height: 95 }} />
+            <Avatar
+              sx={{
+                width: 95,
+                height: 95,
+                bgcolor: 'primary.main',
+              }}
+            >
+              <PersonOutline sx={{ width: 40, height: 40 }} />
+            </Avatar>
             <Box>
               <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
                 {user.firstName} {user.lastName}

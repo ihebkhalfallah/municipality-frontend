@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import PageContainer from 'src/components/container/PageContainer';
 import UsersOverview from './components/UsersOverview';
 import DemandeOverview from './components/DemandeOverview';
+import DemandeTypesChart from './components/DemandeTypesChart';
 import UserRolesDistribution from './components/UserRolesDistribution';
 import EventOverview from './components/EventOverview';
 import AuthorizationOverview from './components/AuthorizationOverview';
 import MonthlyTrendCard from './components/shared/MonthlyTrendCard';
 import { getStats, StatsData } from '../../services/statsService';
-import MonthlyDemandeOverview from './components/shared/MonthlyDemandeOverview';
+import StatsSummaryCard from './components/shared/StatsSummaryCard';
 
 const StatsOverview = () => {
-  const { t } = useTranslation();
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +40,68 @@ const StatsOverview = () => {
     <PageContainer title="Dashboard" description="Statistics Overview">
       <Box>
         <Grid container spacing={3}>
+          {/* Summary Stats */}
+          <Grid item xs={12}>
+            <Typography variant="h5" mb={2}>
+              Overview
+            </Typography>
+          </Grid>
+          {/* Requests Stats */}
+          <Grid item xs={12}>
+            <Typography variant="h6" mb={2}>
+              Requests
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatsSummaryCard
+              title="Demandes"
+              data={stats?.demandeCounts.demande || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatsSummaryCard
+              title="Contestations"
+              data={stats?.demandeCounts.contestation || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatsSummaryCard
+              title="Propositions"
+              data={stats?.demandeCounts.proposition || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatsSummaryCard
+              title="Authorizations"
+              data={stats?.authorizationCounts || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+
+          {/* Events Stats */}
+          <Grid item xs={12}>
+            <Typography variant="h6" mb={2}>
+              Events & Communications
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <StatsSummaryCard
+              title="Events"
+              data={stats?.eventCounts.event || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <StatsSummaryCard
+              title="News"
+              data={stats?.eventCounts.news || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <StatsSummaryCard
+              title="Announcements"
+              data={stats?.eventCounts.announcement || { accepted: 0, pending: 0, rejected: 0 }}
+            />
+          </Grid>
+
           {/* Summary Cards */}
           <Grid item xs={12}>
             <UsersOverview stats={stats} />
@@ -63,34 +124,9 @@ const StatsOverview = () => {
           {/* Monthly Trends */}
           <Grid item xs={12}>
             <Typography variant="h5" mb={2}>
-              {t('Monthly Trends')}
+              Monthly Trends
             </Typography>
           </Grid>
-
-          {/* Combined Demande Overview */}
-          <Grid item xs={12}>
-            <MonthlyDemandeOverview
-              data={{
-                demandes: stats?.demandeCountsByMonth.demande || {
-                  accepted: [],
-                  pending: [],
-                  rejected: [],
-                },
-                contestations: stats?.demandeCountsByMonth.contestation || {
-                  accepted: [],
-                  pending: [],
-                  rejected: [],
-                },
-                propositions: stats?.demandeCountsByMonth.proposition || {
-                  accepted: [],
-                  pending: [],
-                  rejected: [],
-                },
-              }}
-            />
-          </Grid>
-
-          {/* Individual Monthly Trends */}
           <Grid item xs={12} md={6}>
             <MonthlyTrendCard
               title="Demandes"
@@ -107,39 +143,9 @@ const StatsOverview = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <MonthlyTrendCard
-              title="News"
-              data={stats?.eventCountsByMonth.news || { accepted: [], pending: [], rejected: [] }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <MonthlyTrendCard
-              title="Announcements"
-              data={
-                stats?.eventCountsByMonth.announcement || {
-                  accepted: [],
-                  pending: [],
-                  rejected: [],
-                }
-              }
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <MonthlyTrendCard
               title="Contestations"
               data={
                 stats?.demandeCountsByMonth.contestation || {
-                  accepted: [],
-                  pending: [],
-                  rejected: [],
-                }
-              }
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <MonthlyTrendCard
-              title="Propositions"
-              data={
-                stats?.demandeCountsByMonth.proposition || {
                   accepted: [],
                   pending: [],
                   rejected: [],

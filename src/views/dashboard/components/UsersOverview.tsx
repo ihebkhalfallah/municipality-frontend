@@ -25,12 +25,36 @@ const UsersOverview = ({ stats }: StatsProps) => {
       color: 'primary.main',
     },
     {
-      title: t('Admins'),
+      title: t('Total Admins'),
       count:
         (stats?.userCountsByRole?.SUPER_ADMIN || 0) +
         (stats?.userCountsByRole?.PERMISSION_ADMIN || 0) +
         (stats?.userCountsByRole?.CONTESTATION_ADMIN || 0) +
         (stats?.userCountsByRole?.DEMANDE_ADMIN || 0),
+      icon: IconUserCircle,
+      color: 'error.main',
+    },
+    {
+      title: t('Super Admins'),
+      count: stats?.userCountsByRole?.SUPER_ADMIN || 0,
+      icon: IconUserCircle,
+      color: 'error.main',
+    },
+    {
+      title: t('Demande Admins'),
+      count: stats?.userCountsByRole?.DEMANDE_ADMIN || 0,
+      icon: IconUserCircle,
+      color: 'error.main',
+    },
+    {
+      title: t('Contestations Admins'),
+      count: stats?.userCountsByRole?.CONTESTATION_ADMIN || 0,
+      icon: IconUserCircle,
+      color: 'error.main',
+    },
+    {
+      title: t('Permissions Admins'),
+      count: stats?.userCountsByRole?.PERMISSION_ADMIN || 0,
       icon: IconUserCircle,
       color: 'error.main',
     },
@@ -44,6 +68,12 @@ const UsersOverview = ({ stats }: StatsProps) => {
       title: t('Organizations'),
       count:
         (stats?.userCountsByRole?.ORGANIZATION || 0) + (stats?.userCountsByRole?.BUSINESS || 0),
+      icon: IconBuildingStore,
+      color: 'success.main',
+    },
+    {
+      title: t('Business Accounts'),
+      count: stats?.userCountsByRole?.BUSINESS || 0,
       icon: IconBuildingStore,
       color: 'success.main',
     },
