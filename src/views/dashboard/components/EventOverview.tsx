@@ -14,7 +14,7 @@ interface EventStats {
 }
 
 const EventOverview = ({ stats }: { stats: EventStats | null }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const chartOptions: ApexOptions = {
@@ -65,9 +65,11 @@ const EventOverview = ({ stats }: { stats: EventStats | null }) => {
   ];
 
   return (
-    <DashboardCard title={t('Events Overview') as string}>
-      <Chart options={chartOptions} series={series} type="bar" height="300px" />
-    </DashboardCard>
+    <div dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      <DashboardCard title={t('Events Overview') as string}>
+        <Chart options={chartOptions} series={series} type="bar" height="300px" />
+      </DashboardCard>
+    </div>
   );
 };
 

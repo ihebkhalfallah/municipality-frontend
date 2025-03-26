@@ -20,7 +20,7 @@ interface MonthlyTrendProps {
 }
 
 const MonthlyTrendCard = ({ title, data }: MonthlyTrendProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const allMonths = [
@@ -101,9 +101,11 @@ const MonthlyTrendCard = ({ title, data }: MonthlyTrendProps) => {
   ];
 
   return (
-    <DashboardCard title={`${t(title)} ${t('Monthly Trend')}`}>
-      <Chart options={chartOptions} series={series} type="bar" height="300px" />
-    </DashboardCard>
+    <div dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      <DashboardCard title={`${t(title)}`}>
+        <Chart options={chartOptions} series={series} type="bar" height="300px" />
+      </DashboardCard>
+    </div>
   );
 };
 

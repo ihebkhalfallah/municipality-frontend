@@ -14,7 +14,7 @@ interface AuthStats {
 }
 
 const AuthorizationOverview = ({ stats }: { stats: AuthStats | null }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const chartOptions: ApexOptions = {
@@ -27,6 +27,9 @@ const AuthorizationOverview = ({ stats }: { stats: AuthStats | null }) => {
     legend: {
       position: 'bottom',
     },
+    tooltip: {
+      theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+    },
   };
 
   const series = [
@@ -36,9 +39,11 @@ const AuthorizationOverview = ({ stats }: { stats: AuthStats | null }) => {
   ];
 
   return (
-    <DashboardCard title={t('Authorization Status') as string}>
-      <Chart options={chartOptions} series={series} type="donut" height="300px" />
-    </DashboardCard>
+    <div dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      <DashboardCard title={t('Authorization Status') as string}>
+        <Chart options={chartOptions} series={series} type="donut" height="300px" />
+      </DashboardCard>
+    </div>
   );
 };
 

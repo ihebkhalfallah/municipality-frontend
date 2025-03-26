@@ -85,7 +85,7 @@ const UsersOverview = ({ stats }: StatsProps) => {
         <Grid item xs={12} sm={3} key={index}>
           <DashboardCard
             title={card.title}
-            subtitle={`Total ${card.title.toLowerCase()}`}
+            // subtitle={`Total ${card.title.toLowerCase()}`}
             action={<card.icon width={40} height={40} stroke={1.5} style={{ color: card.color }} />}
           >
             <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{card.count}</div>

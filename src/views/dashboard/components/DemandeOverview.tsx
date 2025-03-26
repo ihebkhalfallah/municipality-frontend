@@ -18,7 +18,7 @@ interface StatsProps {
 }
 
 const DemandeOverview = ({ stats }: StatsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const totalDemandes = Object.entries(stats?.demandeCounts || {}).reduce(
@@ -50,9 +50,11 @@ const DemandeOverview = ({ stats }: StatsProps) => {
   const series = [totalDemandes.accepted, totalDemandes.pending, totalDemandes.rejected];
 
   return (
-    <DashboardCard title={t('Demande Overview') as string}>
-      <Chart options={chartOptions} series={series} type="donut" height="300px" />
-    </DashboardCard>
+    <div dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      <DashboardCard title={t('Demande Overview') as string}>
+        <Chart options={chartOptions} series={series} type="donut" height="300px" />
+      </DashboardCard>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { Box, Card, Typography, Stack } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface CountData {
   accepted: number;
@@ -12,6 +13,7 @@ interface StatsSummaryCardProps {
 }
 
 const StatsSummaryCard = ({ title, data }: StatsSummaryCardProps) => {
+  const { t } = useTranslation();
   const total = data.accepted + data.pending + data.rejected;
 
   return (
@@ -22,25 +24,25 @@ const StatsSummaryCard = ({ title, data }: StatsSummaryCardProps) => {
       <Stack spacing={1}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="body2" color="textSecondary">
-            Total
+            {t('Total')}
           </Typography>
           <Typography variant="h6">{total}</Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="body2" color="success.main">
-            Accepted
+            {t('Accepted')}
           </Typography>
           <Typography variant="body1">{data.accepted}</Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="body2" color="warning.main">
-            Pending
+            {t('Pending')}
           </Typography>
           <Typography variant="body1">{data.pending}</Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="body2" color="error.main">
-            Rejected
+            {t('Rejected')}
           </Typography>
           <Typography variant="body1">{data.rejected}</Typography>
         </Box>

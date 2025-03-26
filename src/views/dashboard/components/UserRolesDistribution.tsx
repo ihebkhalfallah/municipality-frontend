@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import { ApexOptions } from 'apexcharts';
 import { USER_ROLE } from '../../../services/statsService';
+import { useTranslation } from 'react-i18next';
 
 interface StatsProps {
   stats: {
@@ -14,6 +15,7 @@ interface StatsProps {
 }
 
 const UserRolesDistribution = ({ stats }: StatsProps) => {
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const chartOptions: ApexOptions = {
@@ -22,13 +24,13 @@ const UserRolesDistribution = ({ stats }: StatsProps) => {
       fontFamily: "'Plus Jakarta Sans', sans-serif;",
     },
     labels: [
-      'Super Admin',
-      'Permission Admin',
-      'Contestation Admin',
-      'Demande Admin',
-      'Citizens',
-      'Organizations',
-      'Business',
+      t('Super Admin'),
+      t('Permission Admin'),
+      t('Contestation Admin'),
+      t('Demande Admin'),
+      t('Citizens'),
+      t('Organizations'),
+      t('Business Accounts'),
     ],
     colors: [
       theme.palette.primary.main,
@@ -58,9 +60,11 @@ const UserRolesDistribution = ({ stats }: StatsProps) => {
   ];
 
   return (
-    <DashboardCard title="User Roles Distribution">
-      <Chart options={chartOptions} series={series} type="pie" height="300px" />
-    </DashboardCard>
+    <div dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+      <DashboardCard title={t('User Roles Distribution') as string}>
+        <Chart options={chartOptions} series={series} type="pie" height="300px" />
+      </DashboardCard>
+    </div>
   );
 };
 
